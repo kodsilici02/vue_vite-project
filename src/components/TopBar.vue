@@ -1,11 +1,16 @@
 <template>
   <div class="topbar" theme="dark" ref="topbar">
-    <v-container class="d-flex justify-center">
+    <v-container class="text-center">
       <div class="button" @click="sidebar()">
         <i class="fa-solid fa-bars fa-2x"></i>
       </div>
-      <router-link class="ma-1 link" :to="{ name: 'home' }">Home </router-link>
-      <router-link class="ma-1 link" :to="{ name: 'about' }">About</router-link>
+      <router-link
+        class="mx-1 link text-2xl sm:text-3xl"
+        :to="{ name: link.name }"
+        v-for="link in links"
+        :key="link.id"
+        >{{ link.title }}</router-link
+      >
     </v-container>
   </div>
 </template>
@@ -18,6 +23,23 @@ export default {
     return {
       sidebarstate,
       scrollTop: 0,
+      links: [
+        {
+          title: "Home",
+          name: "home",
+          id: 1,
+        },
+        {
+          title: "About",
+          name: "about",
+          id: 2,
+        },
+        {
+          title: "Contents",
+          name: "contents",
+          id: 3,
+        },
+      ],
     };
   },
   mounted() {
@@ -60,7 +82,7 @@ export default {
 .topbar {
   width: 100%;
   height: 60px;
-  background-color: rgb(18, 18, 18);
+  background-color: #212121;
   box-shadow: 0 3px 0px 0px rgb(28, 27, 27);
   position: fixed;
   top: 0;
@@ -70,7 +92,6 @@ export default {
 }
 .link {
   font-weight: bold;
-  font-size: 20px;
   text-decoration: none;
   color: rgb(255, 255, 255);
   transition: all 0.5s ease;

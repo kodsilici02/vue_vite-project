@@ -12,15 +12,18 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 library.add(fas);
 import { dom } from "@fortawesome/fontawesome-svg-core";
+import store from "./store";
+import VWave from "v-wave";
 
 dom.watch();
 library.add(faPhone);
 
 loadFonts();
-
-createApp(App)
-  .use(router)
-  .component("font-awesome-icon", FontAwesomeIcon)
-  .use(MotionPlugin)
-  .use(vuetify)
-  .mount("#app");
+const app = createApp(App);
+app.use(VWave);
+app.use(store);
+app.use(router);
+app.use(MotionPlugin);
+app.use(vuetify);
+app.component("font-awesome-icon", FontAwesomeIcon);
+app.mount("#app");

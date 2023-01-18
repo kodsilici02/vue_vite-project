@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div class="container-fluid w-100 bg">
-    <main>
-      <article class="w-full sm:w-10/12">
+  <div class="container-fluid w-100 grid grid-cols-12 bg">
+    <main class="col-span-12 sm:col-span-10 sm:col-start-3 grid grid-cols-10">
+      <article class="col-span-10 sm:col-span-8" v-motion-slide-visible-bottom>
         <h1 class="text-3xl sm:text-5xl" v-motion-slide-visible-bottom>
           My Article
         </h1>
@@ -20,23 +20,20 @@
           <div class="kutu"></div>
         </section>
       </article>
-      <aside class="hidden sm:block sm:w-2/12" v-motion-slide-visible-bottom>
-        <div class="sticky-container p-0" style="top: 0px">
-          <div class="bos"></div>
-          <div
-            class="d-flex justify-content-center"
-            v-for="title in titles"
-            :key="title.id"
+      <aside class="col-span-2 hidden sm:block" v-motion-slide-visible-bottom>
+        <div
+          class="d-flex justify-content-center"
+          v-for="title in titles"
+          :key="title.id"
+        >
+          <h2
+            class="text-3xl sm:text-2xl md:text-3xl font-bold"
+            v-bind:accesskey="title.id"
+            :class="{ active: isActive(title) }"
+            @click="scrollToContent(title)"
           >
-            <h2
-              class="text-3xl sm:text-2xl md:text-3xl font-bold sideh2"
-              v-bind:accesskey="title.id"
-              :class="{ active: isActive(title) }"
-              @click="scrollToContent(title)"
-            >
-              {{ title.title }}
-            </h2>
-          </div>
+            {{ title.title }}
+          </h2>
         </div>
       </aside>
     </main>
@@ -90,7 +87,7 @@ export default {
       // Get the element for the given title
       const element = this.$refs.title[id.id];
       // Scroll the page to the element
-      element.scrollIntoView({ behevior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth" });
     },
   },
 };
@@ -106,40 +103,22 @@ aside h2:hover {
   color: rgb(34, 209, 200);
   transition: 0.5s linear;
 }
-.baslik {
-  color: #ccc;
-}
 aside h2 {
   cursor: pointer;
 }
 aside h2.active {
   color: rgb(39, 150, 85);
 }
-main {
-  display: flex;
-}
+
 article {
   margin-bottom: 300px;
 }
 
-aside > div {
+aside {
+  padding-left: 1em;
   position: sticky;
-  top: 20px;
-  padding-left: 2em;
-}
-aside > div > a {
-  display: block;
-  text-decoration: none;
-  color: rgb(68, 71, 84);
-  border-left: 1px solid #ccc;
-  padding-left: 2em;
-}
-aside a.active {
-  font-weight: bold;
-  border-color: black;
-}
-p {
-  text-align: center;
+  height: 100vh;
+  top: 80px;
 }
 h1 {
   font-weight: bold;
@@ -160,6 +139,6 @@ h2 {
 }
 .bos {
   width: 100%;
-  height: 60px;
+  height: 135px;
 }
 </style>

@@ -2,12 +2,10 @@
   <BackGround></BackGround>
   <SideBar></SideBar>
   <div class="main" ref="main">
-    <TopBar></TopBar>
+    <TopBar> </TopBar>
     <div class="routerview">
       <router-view class="router-view" v-slot="{ Component }">
-        <Transition name="page-opacity" mode="out-in">
-          <component :is="Component" />
-        </Transition>
+        <component :is="Component" />
       </router-view>
     </div>
   </div>
@@ -69,5 +67,23 @@ export default {
 <style>
 body {
   background-color: rgb(255, 255, 255);
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #212121;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(190, 190, 190);
 }
 </style>
