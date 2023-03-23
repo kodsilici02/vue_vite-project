@@ -11,7 +11,7 @@ export default {
 <style scoped>
 .kutu {
   width: 100%;
-  height: 100vh;
+  height: 255vh;
   background-color: aliceblue;
 }
 </style>

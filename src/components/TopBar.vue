@@ -4,18 +4,25 @@
       <div class="button" @click="sidebar()">
         <i class="fa-solid fa-bars fa-2x"></i>
       </div>
-      <router-link
-        class="mx-1 link text-2xl sm:text-3xl"
-        :to="{ name: link.name }"
-        v-for="link in links"
-        :key="link.id"
-        >{{ link.title }}</router-link
-      >
+      <div class="flex justify-center w-full">
+        <div v-for="(item, link) in links">
+          <div v-if="item.topbar" class="text-center">
+            <RouterLink
+              :to="{ name: item.name }"
+              class="mx-1 link text-2xl sm:text-3xl"
+              :key="link"
+            >
+              {{ item.title }}</RouterLink
+            >
+          </div>
+        </div>
+      </div>
     </v-container>
   </div>
 </template>
 
 <script>
+import items from "../router/sidebarroutes.js";
 import { sidebarstate } from "./store.js";
 export default {
   name: "TopBar",
@@ -23,23 +30,7 @@ export default {
     return {
       sidebarstate,
       scrollTop: 0,
-      links: [
-        {
-          title: "Home",
-          name: "home",
-          id: 1,
-        },
-        {
-          title: "About",
-          name: "about",
-          id: 2,
-        },
-        {
-          title: "Contents",
-          name: "contents",
-          id: 3,
-        },
-      ],
+      links: items,
     };
   },
   mounted() {

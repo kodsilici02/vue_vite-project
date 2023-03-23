@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import items from "C:/Users/ASUS/Desktop/vue-project/src/router/sidebarroutes.js";
+import items from "../../../router/sidebarroutes";
 import { useRoute } from "vue-router";
 import { watch, ref } from "vue";
 export default {

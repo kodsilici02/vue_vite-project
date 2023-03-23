@@ -8,31 +8,39 @@
         </h1>
         <section
           v-motion-slide-visible-left
-          v-for="title in titles"
-          :key="title.id"
+          v-for="data in datas"
+          :key="data._id"
         >
-          <div
-            ref="title"
-            v-bind:accesskey="title.id"
-            style="height: 60px"
-          ></div>
-          <h2 class="text-3xl font-bold">{{ title.title }}</h2>
-          <div class="kutu"></div>
+          <div :ref="data._id" :accesskey="data._id" style="height: 60px"></div>
+          <div class="kutu">
+            <div class="image-frame">
+              <img class="image" src="../assets/jupiter.jpg" />
+            </div>
+            <div class="title">
+              <h2 class="ml-4 text-4xl font-bold">{{ data.title }}</h2>
+            </div>
+            <div class="content-preview">
+              {{ data.content }}
+            </div>
+            <v-btn class="show-more" @click="ref" elevation="2"
+              >Show More</v-btn
+            >
+          </div>
         </section>
       </article>
       <aside class="col-span-2 hidden sm:block" v-motion-slide-visible-bottom>
         <div
           class="d-flex justify-content-center"
-          v-for="title in titles"
-          :key="title.id"
+          v-for="data in datas"
+          :key="data._id"
         >
           <h2
             class="text-3xl sm:text-2xl md:text-3xl font-bold"
-            v-bind:accesskey="title.id"
-            :class="{ active: isActive(title) }"
-            @click="scrollToContent(title)"
+            :accesskey="data._id"
+            :class="{ active: isActive(data) }"
+            @click="scrollToContent(data)"
           >
-            {{ title.title }}
+            {{ data.title }}
           </h2>
         </div>
       </aside>
@@ -40,52 +48,71 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import { ref, onMounted } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "HomeView",
   data() {
     return {
-      titles: [
-        { title: "Title 1", id: 0 },
-        { title: "Title 2", id: 1 },
-        { title: "Title 3", id: 2 },
-      ],
       activeTitle: null,
     };
   },
-  mounted() {
-    // Create the IntersectionObserver
-    this.observer = new IntersectionObserver(this.handleIntersection, {
-      root: null,
-      rootMargin: "0px 0px -60% 0px",
-      threshold: 0.5,
-    });
+  setup() {
+    const datas = ref([]);
+    axios
+      .get("http://localhost:3333/dumbs")
+      .then((response) => {
+        datas.value = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    // Observe each title element
-    this.titles.forEach((title) => {
-      this.observer.observe(this.$refs.title[title.id]);
-    });
+    return { datas };
   },
-  beforeUnmount() {
-    // Disconnect the IntersectionObserver
-    this.observer.disconnect();
+  watch: {
+    datas: {
+      async handler(newVal) {
+        if (newVal) {
+          for (const elem of newVal) {
+            await this.$nextTick();
+            const el = this.$refs[elem._id][0];
+            if (el) {
+              let options = {
+                root: null,
+                rootMargin: "0px 0px -60% 0px",
+                threshold: 0.5,
+              };
+              let callback = (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    this.activeTitle = entry.target.accessKey;
+                  }
+                });
+              };
+              let observer = new IntersectionObserver(callback, options);
+              this.datas.forEach((elem) => {
+                observer.observe(this.$refs[elem._id][0]);
+              });
+            }
+          }
+        }
+      },
+      immediate: true,
+    },
   },
   methods: {
-    handleIntersection(entries) {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          this.activeTitle = entry.target.accessKey;
-        }
-      });
-    },
-    isActive(title) {
+    isActive(data) {
       // Check if the given title is the active title
-      return this.activeTitle == title.id;
+      return this.activeTitle == data._id;
     },
-
-    scrollToContent(id) {
+    ref() {
+      console.log(this.activeTitle);
+    },
+    scrollToContent(data) {
       // Get the element for the given title
-      const element = this.$refs.title[id.id];
+      const element = this.$refs[data._id][0];
       // Scroll the page to the element
       element.scrollIntoView({ behavior: "smooth" });
     },
@@ -94,20 +121,45 @@ export default {
 </script>
 
 <style scoped>
+.show-more {
+  margin-left: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: rgb(24, 24, 24);
+  background-color: aliceblue;
+}
+.content-preview {
+  font-size: 20px;
+  font-weight: 400;
+  width: 100%;
+  height: 40%;
+  padding: 15px;
+}
+.image {
+  object-fit: contain;
+  max-height: 100%;
+  width: 100%;
+}
+.image-frame {
+  width: 100%;
+  height: 50%;
+  padding: 10px;
+  background-color: rgb(24, 24, 24);
+}
 aside h2 {
   text-decoration: none;
-  color: rgb(227, 227, 227);
-  transition: 0.5s linear;
+  color: rgb(126, 126, 126);
+  transition: 0.1s linear;
 }
 aside h2:hover {
-  color: rgb(34, 209, 200);
-  transition: 0.5s linear;
+  color: rgb(255, 255, 255);
+  transition: 0.2s linear;
 }
 aside h2 {
   cursor: pointer;
 }
 aside h2.active {
-  color: rgb(39, 150, 85);
+  color: rgb(52, 215, 120);
 }
 
 article {
@@ -134,7 +186,8 @@ h2 {
 .kutu {
   height: 100vh;
   width: 100%;
-  background-color: aquamarine;
+  color: #e3e3e3;
+  background-color: rgb(24, 24, 24);
   border-bottom: 1px solid black;
 }
 .bos {

@@ -47,7 +47,6 @@ export default {
     const route = useRoute();
     // You can watch the route changes
     watch(route, (newVal) => {}, { deep: true });
-
     return {
       route,
     };
@@ -78,7 +77,6 @@ export default {
       }
     },
     list(newVal) {
-      console.log(newVal);
       const elements = document.getElementsByClassName("v-list-group");
       const array = Array.from(elements);
       array.forEach((element) => {

@@ -5,14 +5,31 @@ const items = [
     icon: "mdi mdi-home",
     value: "home",
     path: "/",
+    topbar: true,
   },
   {
     title: "About",
     name: "about",
-
     icon: "mdi mdi-forum",
     value: "about",
     path: "/about",
+    topbar: true,
+  },
+  {
+    title: "Form",
+    name: "form",
+    icon: "mdi mdi-form-select",
+    value: "form",
+    path: "/form",
+    topbar: true,
+  },
+  {
+    title: "Upload",
+    name: "upload",
+    icon: "mdi mdi-form-select",
+    value: "upload",
+    path: "/upload",
+    topbar: true,
   },
   {
     group: true,
