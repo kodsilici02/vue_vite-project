@@ -9,7 +9,7 @@
         :key="index"
       >
         <div class="kutu">
-          <div class="info-top">{{ index }}</div>
+          <div class="info-top"></div>
           <div class="author"></div>
           <div class="image-frame">
             <img class="image" src="../assets/lagoon.jpg" />
