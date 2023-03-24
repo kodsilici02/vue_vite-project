@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid w-full grid grid-cols-12 height">
-    <div class="col-span-3 box2"></div>
-    <div class="col-span-6">
+    <div class="col-span-2 box2"></div>
+    <div class="col-span-7">
       <div class="text-area-box p-2">
         <div class="field field_v2">
           <input
@@ -182,7 +182,7 @@ textarea:focus {
   color: aliceblue;
   background-color: rgb(24, 24, 24);
   position: sticky;
-  height: 92vh;
+  max-height: calc(100vh - 60px);
   top: 60px;
   right: 0;
   margin-left: 5px;

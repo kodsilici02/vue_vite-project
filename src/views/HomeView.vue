@@ -28,7 +28,11 @@
           </div>
         </section>
       </article>
-      <aside class="col-span-2 hidden sm:block" v-motion-slide-visible-bottom>
+      <aside
+        id="aside"
+        class="col-span-2 hidden sm:block"
+        v-motion-slide-visible-bottom
+      >
         <div
           class="d-flex justify-content-center"
           v-for="data in datas"
@@ -71,6 +75,7 @@ export default {
 
     return { datas };
   },
+
   watch: {
     datas: {
       async handler(newVal) {
@@ -169,8 +174,8 @@ article {
 aside {
   padding-left: 1em;
   position: sticky;
-  height: 100vh;
-  top: 80px;
+  max-height: calc(100vh - 60px);
+  top: 60px;
 }
 h1 {
   font-weight: bold;
@@ -185,6 +190,7 @@ h2 {
 }
 .kutu {
   height: 100vh;
+  max-height: calc(100vh - 60px);
   width: 100%;
   color: #e3e3e3;
   background-color: rgb(24, 24, 24);

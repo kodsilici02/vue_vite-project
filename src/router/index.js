@@ -10,6 +10,7 @@ import DefaultCont from "../views/Contents/DefaultCont.vue";
 import FormView from "../views/FormView.vue";
 import UploadCont from "../views/UploadCont.vue";
 import BlogView from "../views/BlogView.vue";
+import BlogDetail from "../views/BlogDetail.vue";
 
 const routes = [
   {
@@ -33,10 +34,17 @@ const routes = [
     component: UploadCont,
   },
   {
-    path: "/blogview",
-    name: "blogview",
+    path: "/contents",
+    name: "contents",
     component: BlogView,
   },
+  {
+    path: "/contents/:title",
+    name: "blogDetail",
+    component: BlogDetail,
+    props: (route) => ({ id: route.query.id }),
+  },
+  /*
   {
     path: "/contents",
     name: "contents",
@@ -69,7 +77,7 @@ const routes = [
         component: ContentFour,
       },
     ],
-  },
+  },*/
   //catch all 404
   { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
 ];

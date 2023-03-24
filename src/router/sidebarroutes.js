@@ -16,13 +16,21 @@ const items = [
     topbar: true,
   },
   {
+    title: "Contents",
+    name: "contents",
+    icon: "mdi mdi-forum",
+    value: "contents",
+    path: "/contents",
+    topbar: true,
+  },
+  /* {
     title: "Form",
     name: "form",
     icon: "mdi mdi-form-select",
     value: "form",
     path: "/form",
     topbar: true,
-  },
+  },*/
   {
     title: "Upload",
     name: "upload",
@@ -31,7 +39,7 @@ const items = [
     path: "/upload",
     topbar: true,
   },
-  {
+  /*{
     group: true,
     groupindex: 0,
     name: "contents",
@@ -78,7 +86,7 @@ const items = [
         path: "/contents/ContentFour",
       },
     ],
-  },
+  },*/
 ];
 
 export default items;
