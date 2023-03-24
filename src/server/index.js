@@ -1,14 +1,17 @@
-import express from 'express'
-import { connectDB } from './db.js'
-import router from './router.js'
-import cors from 'cors'
-const app = express()
-app.use(cors())
+import express from "express";
+import { connectDB } from "./db.js";
+import router from "./router.js";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
-app.use(express.json())
-app.use('/dumbs', router)
+const app = express();
+app.use(cors());
 
-app.listen(3333, () => {
-  console.log('listening on port 3333')
-  connectDB()
-})
+app.use(express.json());
+app.use("/dumbs", router);
+
+app.listen(process.env.PORT, () => {
+  console.log("listening on port 3333");
+  connectDB();
+});
