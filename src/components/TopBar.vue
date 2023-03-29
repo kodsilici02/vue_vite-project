@@ -1,15 +1,15 @@
 <template>
   <div class="topbar" theme="dark" ref="topbar">
-    <v-container class="text-center">
-      <div class="button" @click="sidebar()">
-        <i class="fa-solid fa-bars fa-2x"></i>
+    <v-container class="text-center h-full flex items-center">
+      <div class="button text-xl" @click="sidebar()">
+        <i class="fa-solid fa-bars"></i>
       </div>
-      <div class="flex justify-center w-full">
+      <div class="flex justify-center items-center w-full">
         <div v-for="(item, link) in links">
           <div v-if="item.topbar" class="text-center">
             <RouterLink
               :to="{ name: item.name }"
-              class="mx-1 link text-2xl sm:text-3xl"
+              class="mx-1 link text-xs sm:text-base"
               :key="link"
             >
               {{ item.title }}</RouterLink
@@ -34,14 +34,14 @@ export default {
     };
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll);
+    // window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    //  window.removeEventListener("scroll", this.handleScroll);
   },
 
   methods: {
-    handleScroll() {
+    /* handleScroll() {
       if (window.scrollY == 0) {
         this.$refs.topbar.classList.add("hidden");
       } else {
@@ -50,7 +50,7 @@ export default {
       this.scrollTop = window.scrollY;
       let element = this.$refs.topbar;
       element.style.opacity = Math.min(this.scrollTop / 600, 1);
-    },
+    },*/
     sidebar() {
       sidebarstate.state = 1;
     },
@@ -65,21 +65,21 @@ export default {
 .button {
   cursor: pointer;
   position: absolute;
-  top: 15px;
+
   left: 10px;
   z-index: 9;
   color: aliceblue;
 }
 .topbar {
   width: 100%;
-  height: 60px;
+  height: 50px;
   background-color: #212121;
   box-shadow: 0 3px 0px 0px rgb(28, 27, 27);
   position: fixed;
   top: 0;
   left: 0;
   z-index: 9;
-  opacity: 0;
+  opacity: 1;
 }
 .link {
   font-weight: bold;

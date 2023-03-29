@@ -1,70 +1,72 @@
 <template>
-  <div class="container-fluid w-full grid grid-cols-12 height">
-    <div class="col-span-2 box2"></div>
-    <div class="col-span-7">
-      <div class="text-area-box p-2">
-        <div class="field field_v2">
-          <input
-            id="last-name"
-            class="field__input text-white"
-            v-model="title"
-            placeholder="Title"
-          />
-          <span class="field__label-wrap" aria-hidden="true">
-            <span class="field__label text-white">Enter Title</span>
-          </span>
-        </div>
-        <div class="container-fluid w-full text-white">
-          <div v-for="subtitle in subtitles" :key="subtitle.id">
-            <div class="content-subtitle">
-              {{ subtitle.title }}
-            </div>
-            <textarea
-              :ref="'textarea' + subtitle.id"
-              @input="resize(subtitle.id)"
-              class="w-full text-white"
-              v-model="contents[subtitle.id]"
-            ></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--Sidenav-->
-    <div class="col-span-3 sidenav">
-      <div class="sidenav-title">Sections</div>
-      <div>
-        <div
-          class="grid grid-cols-12"
-          v-for="subtitle in subtitles"
-          :key="subtitle.id"
-        >
-          <div class="col-span-8 subtitles">
+  <div>
+    <div class="container-fluid w-full grid grid-cols-12 height">
+      <div class="col-span-2 box2"></div>
+      <div class="col-span-7">
+        <div class="text-area-box p-2">
+          <div class="field field_v2">
             <input
-              type="text "
-              class="subtitle-input"
-              v-model="subtitle.title"
-              placeholder="Subtitle"
+              id="last-name"
+              class="field__input text-white"
+              v-model="title"
+              placeholder="Title"
             />
+            <span class="field__label-wrap" aria-hidden="true">
+              <span class="field__label text-white">Enter Title</span>
+            </span>
           </div>
-          <div
-            class="col-span-2 grid justify-items-center content-center button"
-            @click="deleteSubtitle(subtitle)"
-          >
-            <i class="fa-solid fa-square-minus fa-2xl"></i>
+          <div class="container-fluid w-full text-white">
+            <div v-for="subtitle in subtitles" :key="subtitle.id">
+              <div class="content-subtitle">
+                {{ subtitle.title }}
+              </div>
+              <textarea
+                :ref="'textarea' + subtitle.id"
+                @input="resize(subtitle.id)"
+                class="w-full text-white"
+                v-model="contents[subtitle.id]"
+              ></textarea>
+            </div>
           </div>
         </div>
       </div>
-      <div @click="addSubtitle" class="button">
-        <i class="fa-solid fa-square-plus fa-2xl"></i>
+      <!--Sidenav-->
+      <div class="col-span-3 sidenav">
+        <div class="sidenav-title">Sections</div>
+        <div>
+          <div
+            class="grid grid-cols-12"
+            v-for="subtitle in subtitles"
+            :key="subtitle.id"
+          >
+            <div class="col-span-8 subtitles">
+              <input
+                type="text "
+                class="subtitle-input"
+                v-model="subtitle.title"
+                placeholder="Subtitle"
+              />
+            </div>
+            <div
+              class="col-span-2 grid justify-items-center content-center button"
+              @click="deleteSubtitle(subtitle)"
+            >
+              <i class="fa-solid fa-square-minus fa-2xl"></i>
+            </div>
+          </div>
+        </div>
+        <div @click="addSubtitle" class="button">
+          <i class="fa-solid fa-square-plus fa-2xl"></i>
+        </div>
+        <button @click="button2" class="text-white">Button</button>
       </div>
-      <button @click="button2" class="text-white">Button</button>
     </div>
+    <Modal
+      :show="showModal"
+      @add-title="addTitle"
+      @close="this.showModal = false"
+    ></Modal>
   </div>
-  <Modal
-    :show="showModal"
-    @add-title="addTitle"
-    @close="this.showModal = false"
-  ></Modal>
 </template>
 
 <script>
@@ -182,8 +184,8 @@ textarea:focus {
   color: aliceblue;
   background-color: rgb(24, 24, 24);
   position: sticky;
-  max-height: calc(100vh - 60px);
-  top: 60px;
+  max-height: calc(100vh - 50px);
+  top: 50px;
   right: 0;
   margin-left: 5px;
   overflow-y: scroll;
@@ -191,7 +193,7 @@ textarea:focus {
 .title {
   background-color: aliceblue;
   border-radius: 10px;
-  height: 60px;
+  height: 50px;
   width: 100%;
   font-size: 28px;
   font-weight: bold;

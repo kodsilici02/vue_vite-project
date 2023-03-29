@@ -1,33 +1,20 @@
 <template>
-  <div class="background" ref="background"></div>
-  <div class="banner"></div>
+  <div
+    class="quote-container h-full text-zinc-50 grid grid-cols-1 gap-4 content-center ..."
+  >
+    <div class="quote-1 text-4xl sm:text-5xl md:text-8xl text-center">
+      Somewhere, something incredible is waiting to be known
+    </div>
+    <div class="quote-2 text-4xl sm:text-5xl md:text-8xl h-full text-center">
+      -Carl Sagan
+    </div>
+  </div>
 </template>
-
 <script>
 export default {
-  name: "BackGround",
-  data() {
-    return {
-      scollTop: 1,
-    };
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
-
-  methods: {
-    handleScroll() {
-      this.scrollTop = window.scrollY;
-      let element = this.$refs.background;
-      element.style.opacity = Math.min(this.scrollTop / 600, 0.5);
-    },
-  },
+  name: "BgQuote",
 };
 </script>
-
 <style scoped>
 .quote-container {
   height: 100vh;
@@ -89,30 +76,5 @@ export default {
       background-position: var(--bg-size) 0;
     }
   }
-}
-.bos {
-  width: 100%;
-  height: 30vh;
-  z-index: -4;
-}
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -3;
-  background-color: black;
-  opacity: 0;
-}
-.banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-size: cover;
-  z-index: -4;
-  background-image: url("../assets/AbandonedNecessaryCapeghostfrog-mobile.gif");
 }
 </style>

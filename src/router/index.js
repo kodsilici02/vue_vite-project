@@ -91,12 +91,12 @@ const router = createRouter({
       setTimeout(() => {
         window.scrollTo({ top: savedPosition.top, behavior: "smooth" });
       }, 100);
-    } else {
+    } /*else {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       setTimeout(() => {
         window.scrollTo({ top: 1290, left: 0, behavior: "smooth" });
       }, 500);
-    }
+    }*/
   },
 });
 

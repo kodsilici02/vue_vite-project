@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
+  <BgQuote></BgQuote>
   <div class="container-fluid w-100 grid grid-cols-12 bg">
     <main class="col-span-12 sm:col-span-10 sm:col-start-3 grid grid-cols-10">
       <article class="col-span-10 sm:col-span-8" v-motion-slide-visible-bottom>
@@ -11,7 +12,7 @@
           v-for="data in datas"
           :key="data._id"
         >
-          <div :ref="data._id" :accesskey="data._id" style="height: 60px"></div>
+          <div :ref="data._id" :accesskey="data._id" style="height: 50px"></div>
           <div class="kutu">
             <div class="image-frame">
               <img class="image" src="../assets/jupiter.jpg" />
@@ -53,10 +54,14 @@
 </template>
 <script>
 import axios from "axios";
+import BgQuote from "../components/BgQuote.vue";
 import { ref, onMounted } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "HomeView",
+  components: {
+    BgQuote,
+  },
   data() {
     return {
       activeTitle: null,
@@ -174,8 +179,8 @@ article {
 aside {
   padding-left: 1em;
   position: sticky;
-  max-height: calc(100vh - 60px);
-  top: 60px;
+  max-height: calc(100vh - 50px);
+  top: 50px;
 }
 h1 {
   font-weight: bold;
@@ -190,7 +195,7 @@ h2 {
 }
 .kutu {
   height: 100vh;
-  max-height: calc(100vh - 60px);
+  max-height: calc(100vh - 50px);
   width: 100%;
   color: #e3e3e3;
   background-color: rgb(24, 24, 24);

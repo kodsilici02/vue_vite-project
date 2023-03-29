@@ -2,12 +2,8 @@
 <template>
   <div class="container-fluid w-100 grid grid-cols-12">
     <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
-    <div class="col-span-12 sm:col-span-6">
-      <section
-        v-motion-slide-visible-left
-        v-for="(title, index) in titles"
-        :key="index"
-      >
+    <div class="col-span-6 sm:col-span-6">
+      <section v-for="(title, index) in titles" :key="index">
         <div class="kutu">
           <div class="info-top"></div>
           <div class="author"></div>
@@ -41,53 +37,81 @@
           </div>
         </div>
       </section>
+      <div class="w-full flex justify-center" v-if="loading">
+        <atom-spinner
+          :animation-duration="1500"
+          :size="64"
+          :color="'#ff1d5e'"
+        />
+      </div>
     </div>
+
     <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
   </div>
 </template>
 <script>
+import { AtomSpinner, FingerprintSpinner } from "epic-spinners";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "BlogView",
+  components: {
+    AtomSpinner,
+    FingerprintSpinner,
+  },
   data() {
     return {
-      datas: [],
-      contents: [],
-      titles: [],
+      loading: true,
       text: null,
       text2: null,
     };
   },
-  mounted() {
-    axios
-      .get("http://localhost:3333/dumbs/blogget")
-      .then((response) => {
-        this.datas = response.data;
-        this.datas.forEach((d) => {
-          this.titles.push({
-            id: d._id,
-            title: d.title,
-          });
-          console.log(this.titles);
-          d.sections.forEach((el) => {
-            this.contents.push({
-              id: this.contents.length,
-              title: el.title.replace(/ /g, "&nbsp;"),
-              content: el.content.split("\n"),
+  setup() {
+    const datas = ref([]);
+    const contents = ref([]);
+    const titles = ref([]);
+    const loading = ref(true);
+    setTimeout(() => {
+      axios
+        .get("http://127.0.0.1:3333/dumbs/blogget")
+        .then((response) => {
+          datas.value = response.data;
+          datas.value.forEach((d) => {
+            titles.value.push({
+              id: d._id,
+              title: d.title,
+            });
+            console.log(titles.value);
+            d.sections.forEach((el) => {
+              contents.value.push({
+                id: contents.value.length,
+                title: el.title.replace(/ /g, "&nbsp;"),
+                content: el.content.split("\n"),
+              });
             });
           });
+          loading.value = false;
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }, 3000);
+    return { datas, contents, titles, loading };
   },
 };
 </script>
 
 <style scoped>
+.page-opacity-enter-active,
+.page-opacity-leave-active {
+  transition: 0.5s ease;
+}
+.page-opacity-enter-from,
+.page-opacity-leave-to {
+  opacity: 0;
+  transform: translatey(100px);
+}
 .author {
   height: 8%;
 }
@@ -105,7 +129,7 @@ export default {
   margin-top: 10px;
   border-radius: 10px;
   height: 100vh;
-  max-height: calc(100vh - 60px);
+  max-height: calc(100vh - 50px);
   width: 100%;
   color: #e3e3e3;
   background-color: rgb(24, 24, 24);
@@ -144,8 +168,8 @@ export default {
 .sidenav {
   padding-left: 1em;
   position: sticky;
-  max-height: calc(100vh - 60px);
+  max-height: calc(100vh - 50px);
   height: 100vh;
-  top: 60px;
+  top: 50px;
 }
 </style>

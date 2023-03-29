@@ -30,23 +30,26 @@
 </template>
 <script>
 import axios from "axios";
+import { ref } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "FormView",
   data() {
-    return {
-      datas: [],
-    };
+    return {};
   },
-  mounted() {
+  mounted() {},
+  setup() {
+    const datas = ref([]);
     axios
       .get("http://localhost:3333/dumbs")
       .then((response) => {
-        this.datas = response.data;
+        datas.value = response.data;
+        console.log(datas.value);
       })
       .catch((error) => {
         console.log(error);
       });
+    return { datas };
   },
   methods: {
     button(id) {
@@ -91,7 +94,7 @@ export default {
 }
 .box {
   position: sticky;
-  top: 60px;
+  top: 50px;
   height: 100vh;
   background-color: rgb(24, 24, 24);
 }
