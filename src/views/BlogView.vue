@@ -37,72 +37,97 @@
           </div>
         </div>
       </section>
-      <div class="w-full flex justify-center" v-if="loading">
-        <atom-spinner
-          :animation-duration="1500"
-          :size="64"
-          :color="'#ff1d5e'"
-        />
+
+      <div v-if="dataLoading" class="w-full flex justify-center">
+        <OrbitSpinner
+          :size="55"
+          :animation-duration="1200"
+          color="#ff1d5e"
+        ></OrbitSpinner>
       </div>
     </div>
-
     <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
+    <div class="w-full page-footer" ref="intersection"></div>
   </div>
 </template>
 <script>
-import { AtomSpinner, FingerprintSpinner } from "epic-spinners";
+import { OrbitSpinner } from "epic-spinners";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "BlogView",
   components: {
-    AtomSpinner,
-    FingerprintSpinner,
+    OrbitSpinner,
   },
   data() {
     return {
-      loading: true,
+      datas: [],
+      contents: [],
+      titles: [],
+      dataLoading: true,
       text: null,
       text2: null,
+      page: 0,
+      dataPerPage: 1,
     };
   },
-  setup() {
-    const datas = ref([]);
-    const contents = ref([]);
-    const titles = ref([]);
-    const loading = ref(true);
-    setTimeout(() => {
-      axios
-        .get("http://127.0.0.1:3333/dumbs/blogget")
-        .then((response) => {
-          datas.value = response.data;
-          datas.value.forEach((d) => {
-            titles.value.push({
-              id: d._id,
-              title: d.title,
-            });
-            console.log(titles.value);
-            d.sections.forEach((el) => {
-              contents.value.push({
-                id: contents.value.length,
-                title: el.title.replace(/ /g, "&nbsp;"),
-                content: el.content.split("\n"),
+  mounted() {
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+    let observer = new IntersectionObserver(this.fetch, options);
+    observer.observe(this.$refs.intersection);
+    this.fetch();
+  },
+
+  methods: {
+    more() {
+      this.fetch();
+    },
+    fetch() {
+      this.dataLoading = true;
+      setTimeout(() => {
+        axios
+          .get("http://localhost:3333/dumbs/blogget", {
+            params: {
+              p: this.page,
+              d: this.dataPerPage,
+            },
+          })
+          .then((response) => {
+            this.datas = response.data;
+            this.datas.forEach((d) => {
+              this.titles.push({
+                id: d._id,
+                title: d.title,
+              });
+              d.sections.forEach((el) => {
+                this.contents.push({
+                  id: this.contents.length,
+                  title: el.title.replace(/ /g, "&nbsp;"),
+                  content: el.content.split("\n"),
+                });
               });
             });
+            this.dataLoading = false;
+            this.page++;
+          })
+          .catch((error) => {
+            console.log(error);
           });
-          loading.value = false;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, 3000);
-    return { datas, contents, titles, loading };
+      }, 1000);
+    },
   },
 };
 </script>
 
 <style scoped>
+.page-footer {
+  height: 1px;
+}
 .page-opacity-enter-active,
 .page-opacity-leave-active {
   transition: 0.5s ease;
