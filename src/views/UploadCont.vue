@@ -3,15 +3,10 @@
     <div class="container-fluid w-full grid grid-cols-12 height">
       <div class="col-span-2"></div>
       <div class="col-span-7">
-        <div class="h-25 bg-slate-50">
-          <div>
-            <QuillEditor
-              theme="snow"
-              toolbar="full"
-              v-model:content="dataProperty"
-            />
-          </div>
+        <div>
+          <QuillEditor theme="snow" toolbar="full" />
         </div>
+
         <div class="text-area-box p-2">
           <div class="field field_v2">
             <input
@@ -73,7 +68,7 @@
           <v-btn class="show-more mr-2" @click="upload" elevation="2"
             >Upload</v-btn
           >
-          <v-btn class="show-more mr-2" @click="contentlog" elevation="2"
+          <v-btn class="show-more mr-2" @click="saveContent" elevation="2"
             >content</v-btn
           >
         </div>
@@ -90,9 +85,8 @@
 <script>
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import "@vueup/vue-quill/dist/vue-quill.bubble.css";
+import { ref } from "vue";
 import axios from "axios";
-import { object } from "webidl-conversions";
 import Modal from "./MyModal.vue";
 export default {
   name: "UploadCont",
@@ -110,10 +104,9 @@ export default {
       showModal: false,
     };
   },
-
   methods: {
-    contentlog() {
-      console.log(this.content);
+    saveContent() {
+      console.log(document.querySelector(".ql-editor").innerHTML);
     },
     upload() {
       this.subtitles.forEach((el) => {

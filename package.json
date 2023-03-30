@@ -15,9 +15,6 @@
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
-    "@tiptap/pm": "^2.0.0-beta.220",
-    "@tiptap/starter-kit": "^2.0.0-beta.220",
-    "@tiptap/vue-3": "^2.0.0-beta.220",
     "@vueup/vue-quill": "^1.1.1",
     "@vueuse/motion": "^2.0.0-beta.12",
     "autoprefixer": "^10.4.14",
@@ -33,6 +30,7 @@
     "postcss": "^8.4.21",
     "roboto-fontface": "*",
     "tailwindcss": "^3.2.7",
+    "tiptap": "^1.32.2",
     "v-wave": "^1.5.0",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
