@@ -71,7 +71,7 @@ export default {
       text: null,
       text2: null,
       page: 0,
-      dataPerPage: 1,
+      dataPerPage: 10,
     };
   },
   mounted() {

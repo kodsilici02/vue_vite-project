@@ -3,10 +3,6 @@
     <div class="container-fluid w-full grid grid-cols-12 height">
       <div class="col-span-2"></div>
       <div class="col-span-7">
-        <div class="bg-gray-50">
-          <QuillEditor theme="snow" toolbar="full" :options="editorOptions" />
-        </div>
-
         <div class="text-area-box p-2">
           <div class="field field_v2">
             <input
@@ -20,65 +16,21 @@
               <span class="field__label text-white">Enter Title</span>
             </span>
           </div>
-          <div class="container-fluid w-full text-white">
-            <div v-for="subtitle in subtitles" :key="subtitle.id">
-              <div class="content-subtitle">
-                {{ subtitle.title }}
-              </div>
-
-              <textarea
-                :ref="'textarea' + subtitle.id"
-                @input="resize(subtitle.id)"
-                class="w-full text-white"
-                v-model="contents[subtitle.id]"
-              ></textarea>
-            </div>
+          <div class="mt-5">
+            <QuillEditor theme="snow" :options="editorOptions" />
           </div>
         </div>
       </div>
       <!--Sidenav-->
       <div class="col-span-3 sidenav">
         <div class="sidenav-title">Sections</div>
-        <div>
-          <div
-            class="grid grid-cols-12"
-            v-for="subtitle in subtitles"
-            :key="subtitle.id"
-          >
-            <div class="col-span-8 subtitles">
-              <input
-                type="text "
-                class="subtitle-input"
-                v-model="subtitle.title"
-                placeholder="Subtitle"
-              />
-            </div>
-            <div
-              class="col-span-2 grid justify-items-center content-center button"
-              @click="deleteSubtitle(subtitle)"
-            >
-              <i class="fa-solid fa-square-minus fa-2xl"></i>
-            </div>
-          </div>
-        </div>
-        <div @click="addSubtitle" class="button">
-          <i class="fa-solid fa-square-plus fa-2xl"></i>
-        </div>
         <div class="w-full flex justify-end mt-2">
-          <v-btn class="show-more mr-2" @click="upload" elevation="2"
+          <v-btn class="upload-button mr-2" @click="qlUpload" elevation="2"
             >Upload</v-btn
-          >
-          <v-btn class="show-more mr-2" @click="qlUpload" elevation="2"
-            >content</v-btn
           >
         </div>
       </div>
     </div>
-    <Modal
-      :show="showModal"
-      @add-title="addTitle"
-      @close="this.showModal = false"
-    ></Modal>
   </div>
 </template>
 
@@ -87,11 +39,11 @@ import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { ref } from "vue";
 import axios from "axios";
-import Modal from "./MyModal.vue";
+import ".././assets/input.css";
+import ".././assets/VueQuill.css";
 export default {
   name: "UploadCont",
   components: {
-    Modal,
     QuillEditor,
   },
   data() {
@@ -103,7 +55,23 @@ export default {
       contents: [],
       showModal: false,
       editorOptions: {
-        modules: {},
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline"], // toggled buttons
+            ["blockquote", "code-block"],
+
+            [{ header: 1 }, { header: 2 }], // custom button values
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ script: "sub" }, { script: "super" }], // superscript/subscript
+            [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+            [{ direction: "rtl" }], // text direction
+            [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+            [{ align: [] }],
+            ["link", "image"],
+
+            ["clean"], // remove formatting button
+          ],
+        },
         handlers: {
           image: this.imageHandler,
         },
@@ -125,63 +93,12 @@ export default {
           console.error("There was an error:", error);
         });
     },
-    upload() {
-      this.subtitles.forEach((el) => {
-        this.sections.push({
-          title: el.title,
-          content: this.contents[el.id],
-        });
-      });
-      const payload = {
-        title: this.title,
-        sections: this.sections,
-      };
-      axios
-        .post("http://localhost:3333/dumbs/blogpost", payload)
-        .then((response) => {
-          console.log("Post was successful:", response.data);
-        })
-        .catch((error) => {
-          console.error("There was an error:", error);
-        });
-    },
-    addTitle(n) {
-      this.showModal = false;
-      this.subtitles.push({
-        title: n,
-        id: this.subtitles.length,
-      });
-    },
-    resize(id) {
-      this.subtitles.forEach((el) => {
-        if (el.id == id) {
-          const element = this.$refs["textarea" + el.id][0];
-          element.style.height = "18px";
-          element.style.height = element.scrollHeight + "px";
-        }
-      });
-    },
-    deleteSubtitle(subtitle) {
-      const index = this.subtitles.indexOf(subtitle);
-      this.subtitles.splice(index, 1);
-    },
-    addSubtitle() {
-      this.showModal = true;
-    },
   },
 };
 </script>
-<style>
-.ql-editor img {
-  border-radius: 10px;
-  width: 805px;
-  height: 600px;
-  object-fit: cover;
-  object-position: center;
-}
-</style>
+
 <style scoped>
-.show-more {
+.upload-button {
   margin-left: 10px;
   border-radius: 10px;
   font-weight: bold;
