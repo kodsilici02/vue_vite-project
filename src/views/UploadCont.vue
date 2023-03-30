@@ -1,8 +1,17 @@
 <template>
   <div>
     <div class="container-fluid w-full grid grid-cols-12 height">
-      <div class="col-span-2 box2"></div>
+      <div class="col-span-2"></div>
       <div class="col-span-7">
+        <div class="h-25 bg-slate-50">
+          <div>
+            <QuillEditor
+              theme="snow"
+              toolbar="full"
+              v-model:content="dataProperty"
+            />
+          </div>
+        </div>
         <div class="text-area-box p-2">
           <div class="field field_v2">
             <input
@@ -10,6 +19,7 @@
               class="field__input text-white"
               v-model="title"
               placeholder="Title"
+              autocomplete="off"
             />
             <span class="field__label-wrap" aria-hidden="true">
               <span class="field__label text-white">Enter Title</span>
@@ -20,6 +30,7 @@
               <div class="content-subtitle">
                 {{ subtitle.title }}
               </div>
+
               <textarea
                 :ref="'textarea' + subtitle.id"
                 @input="resize(subtitle.id)"
@@ -58,7 +69,14 @@
         <div @click="addSubtitle" class="button">
           <i class="fa-solid fa-square-plus fa-2xl"></i>
         </div>
-        <button @click="button2" class="text-white">Button</button>
+        <div class="w-full flex justify-end mt-2">
+          <v-btn class="show-more mr-2" @click="upload" elevation="2"
+            >Upload</v-btn
+          >
+          <v-btn class="show-more mr-2" @click="contentlog" elevation="2"
+            >content</v-btn
+          >
+        </div>
       </div>
     </div>
     <Modal
@@ -70,6 +88,9 @@
 </template>
 
 <script>
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 import axios from "axios";
 import { object } from "webidl-conversions";
 import Modal from "./MyModal.vue";
@@ -77,9 +98,11 @@ export default {
   name: "UploadCont",
   components: {
     Modal,
+    QuillEditor,
   },
   data() {
     return {
+      content: null,
       title: null,
       sections: [],
       subtitles: [],
@@ -89,7 +112,10 @@ export default {
   },
 
   methods: {
-    button2() {
+    contentlog() {
+      console.log(this.content);
+    },
+    upload() {
       this.subtitles.forEach((el) => {
         this.sections.push({
           title: el.title,
@@ -136,6 +162,13 @@ export default {
 };
 </script>
 <style scoped>
+.show-more {
+  margin-left: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: rgb(24, 24, 24);
+  background-color: aliceblue;
+}
 textarea {
   width: 100%;
   min-height: 72px;
@@ -179,6 +212,7 @@ textarea:focus {
 }
 .height {
   height: auto;
+  margin-top: 60px;
 }
 .sidenav {
   color: aliceblue;

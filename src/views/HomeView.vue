@@ -80,7 +80,6 @@ export default {
 
     return { datas };
   },
-
   watch: {
     datas: {
       async handler(newVal) {

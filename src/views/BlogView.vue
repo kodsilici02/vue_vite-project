@@ -3,7 +3,8 @@
   <div class="container-fluid w-100 grid grid-cols-12">
     <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
     <div class="col-span-6 sm:col-span-6">
-      <section v-for="(title, index) in titles" :key="index">
+      <section v-for="(title, index) in titles" :key="title._id">
+        <div :ref="title._id" :accesskey="title._id" style="height: 50px"></div>
         <div class="kutu">
           <div class="info-top"></div>
           <div class="author"></div>
@@ -37,8 +38,7 @@
           </div>
         </div>
       </section>
-
-      <div v-if="dataLoading" class="w-full flex justify-center">
+      <div v-if="dataLoading" class="w-full flex justify-center mt-5">
         <OrbitSpinner
           :size="55"
           :animation-duration="1200"
@@ -46,7 +46,7 @@
         ></OrbitSpinner>
       </div>
     </div>
-    <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
+    <div class="hidden sm:grid sm:col-span-3 sidenav"></div>
     <div class="w-full page-footer" ref="intersection"></div>
   </div>
 </template>

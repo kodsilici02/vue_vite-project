@@ -1,9 +1,11 @@
 <template>
-  <div class="topbar" theme="dark" ref="topbar">
-    <v-container class="text-center h-full flex items-center">
+  <div class="topbar grid grid-cols-12" theme="dark" ref="topbar">
+    <div class="col-span-2 flex items-center justify-items-center">
       <div class="button text-xl" @click="sidebar()">
         <i class="fa-solid fa-bars"></i>
       </div>
+    </div>
+    <div class="text-center h-full flex items-center col-span-8">
       <div class="flex justify-center items-center w-full">
         <div v-for="(item, link) in links">
           <div v-if="item.topbar" class="text-center">
@@ -17,7 +19,29 @@
           </div>
         </div>
       </div>
-    </v-container>
+    </div>
+    <div
+      class="flex justify-end items-center col-span-2 h-full gap-3 text-slate-50 mr-5"
+    >
+      <a
+        class="h-full flex items-center"
+        href="https://discord.gg/4B45j7bWqn"
+        target="_blank"
+        ><i class="fa-brands fa-discord fa-xl icons"></i
+      ></a>
+      <a
+        class="h-full flex items-center icons"
+        href="https://github.com/kodsilici02"
+        target="_blank"
+        ><i class="fa-brands fa-github fa-xl"></i
+      ></a>
+      <a
+        class="h-full flex items-center icons"
+        href="https://twitter.com/Yazilim_Panteri"
+        target="_blank"
+        ><i class="fa-brands fa-twitter fa-xl"></i
+      ></a>
+    </div>
   </div>
 </template>
 
@@ -59,13 +83,19 @@ export default {
 </script>
 
 <style scoped>
+.icons {
+  color: rgb(133, 133, 133);
+  transition: all 0.2s ease-in-out;
+}
+.icons:hover {
+  color: rgb(220, 220, 220);
+}
 .hidden {
   display: none;
 }
 .button {
   cursor: pointer;
   position: absolute;
-
   left: 10px;
   z-index: 9;
   color: aliceblue;

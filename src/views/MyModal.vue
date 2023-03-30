@@ -8,6 +8,7 @@
             <label for="last-name" class="ha-screen-reader">Last name</label>
             <input
               @keyup.enter="modal"
+              autocomplete="off"
               id="last-name"
               class="field__input"
               v-model="title"
@@ -81,7 +82,6 @@ export default {
   left: 0px;
   font-size: 16px;
   color: #000000;
-  pointer-event: none;
   transition: all 0.5s ease-in-out;
 }
 .input-container input {
@@ -157,7 +157,7 @@ export default {
   border-radius: 10px;
   background-color: aliceblue;
   height: auto;
-  width: 60vw;
+  width: 50vw;
   max-height: 500px;
   z-index: 4;
 }

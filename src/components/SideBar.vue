@@ -7,9 +7,9 @@
     >
       <v-container theme="dark">
         <v-row>
-          <v-col cols="12" class="d-flex justify-end">
+          <v-col cols="12" class="flex justify-end">
             <div class="button" @click="toggleState()">
-              <i class="fa-solid fa-xmark fa-2x"></i>
+              <i class="fa-solid fa-xmark fa-xl"></i>
             </div>
           </v-col>
         </v-row>

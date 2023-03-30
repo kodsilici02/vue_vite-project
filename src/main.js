@@ -25,4 +25,5 @@ app.use(router);
 app.use(MotionPlugin);
 app.use(vuetify);
 app.component("font-awesome-icon", FontAwesomeIcon);
+
 app.mount("#app");

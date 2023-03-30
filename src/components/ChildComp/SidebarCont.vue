@@ -8,9 +8,9 @@
         :class="{ 'active-link': route.path == list.path }"
       >
         <div class="col-span-2 flex items-center justify-center">
-          <i :class="list.icon" class="text-3xl"></i>
+          <i :class="list.icon" class="text-xl"></i>
         </div>
-        <div class="col-span-10 text-left ma-1 ml-4 text-2xl">
+        <div class="col-span-10 flex items-center text-left ml-1 text-md">
           {{ list.title }}
         </div>
       </div>
