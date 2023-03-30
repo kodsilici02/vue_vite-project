@@ -1,7 +1,23 @@
 import express from "express";
-import { dumbsSchema, sectionsSchema } from "./models.js";
+import { dumbsSchema, sectionsSchema, htmlsSchema } from "./models.js";
 
 const router = express.Router();
+router.get("/imageget", async (req, res) => {
+  try {
+    const image = await htmlsSchema.find();
+    res.status(200).json(image);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
+});
+router.post("/imagepost", async (req, res) => {
+  try {
+    const image = await htmlsSchema.create(req.body);
+    res.status(201).json(image);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
 //test
 router.post("/blogpost", async (req, res) => {
   try {

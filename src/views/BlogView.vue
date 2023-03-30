@@ -3,6 +3,7 @@
   <div class="container-fluid w-100 grid grid-cols-12">
     <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
     <div class="col-span-6 sm:col-span-6">
+      <div v-for="image in images" v-html="image.html"></div>
       <section v-for="(title, index) in titles" :key="title._id">
         <div :ref="title._id" :accesskey="title._id" style="height: 50px"></div>
         <div class="kutu">
@@ -62,6 +63,7 @@ export default {
   },
   data() {
     return {
+      images: [],
       datas: [],
       contents: [],
       titles: [],
@@ -73,6 +75,10 @@ export default {
     };
   },
   mounted() {
+    axios.get("http://localhost:3333/dumbs/imageget").then((response) => {
+      this.images = response.data;
+      console.log(this.images);
+    });
     let options = {
       root: null,
       rootMargin: "0px",

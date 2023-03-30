@@ -3,8 +3,8 @@
     <div class="container-fluid w-full grid grid-cols-12 height">
       <div class="col-span-2"></div>
       <div class="col-span-7">
-        <div>
-          <QuillEditor theme="snow" toolbar="full" />
+        <div class="bg-gray-50">
+          <QuillEditor theme="snow" toolbar="full" :options="editorOptions" />
         </div>
 
         <div class="text-area-box p-2">
@@ -68,7 +68,7 @@
           <v-btn class="show-more mr-2" @click="upload" elevation="2"
             >Upload</v-btn
           >
-          <v-btn class="show-more mr-2" @click="saveContent" elevation="2"
+          <v-btn class="show-more mr-2" @click="qlUpload" elevation="2"
             >content</v-btn
           >
         </div>
@@ -102,11 +102,28 @@ export default {
       subtitles: [],
       contents: [],
       showModal: false,
+      editorOptions: {
+        modules: {},
+        handlers: {
+          image: this.imageHandler,
+        },
+      },
     };
   },
   methods: {
-    saveContent() {
-      console.log(document.querySelector(".ql-editor").innerHTML);
+    qlUpload() {
+      const payload = document.querySelector(".ql-editor").innerHTML;
+
+      axios
+        .post("http://localhost:3333/dumbs/imagepost", {
+          html: payload,
+        })
+        .then((response) => {
+          console.log("Post was successful:", response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error:", error);
+        });
     },
     upload() {
       this.subtitles.forEach((el) => {
@@ -154,6 +171,15 @@ export default {
   },
 };
 </script>
+<style>
+.ql-editor img {
+  border-radius: 10px;
+  width: 805px;
+  height: 600px;
+  object-fit: cover;
+  object-position: center;
+}
+</style>
 <style scoped>
 .show-more {
   margin-left: 10px;

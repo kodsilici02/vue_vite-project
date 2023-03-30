@@ -7,7 +7,7 @@
       <div v-for="(paragraph, index2) in sections">
         <div v-html="paragraph.title"></div>
         <template v-for="(paragraph, index2) in paragraph.content">
-          <p v-if="paragraph">{{ paragraph }}</p>
+          <p v-if="paragraph" v-html="paragraph.replace(/ /g, '&nbsp')"></p>
           <br v-else />
         </template>
       </div>
@@ -38,7 +38,7 @@ export default {
         data.value.sections.forEach((el) => {
           sections.value.push({
             id: sections.value.length,
-            title: el.title.replace(/ /g, "&nbsp;"),
+            title: el.title,
             content: el.content.split("\n"),
           });
         });
