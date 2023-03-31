@@ -2,40 +2,83 @@
 <template>
   <div class="container-fluid w-100 grid grid-cols-12">
     <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
-    <div class="col-span-6 sm:col-span-6">
-      <div v-for="image in images" v-html="image.html"></div>
-      <section v-for="(title, index) in titles" :key="title._id">
-        <div :ref="title._id" :accesskey="title._id" style="height: 50px"></div>
-        <div class="kutu">
-          <div class="info-top"></div>
-          <div class="author"></div>
-          <div class="image-frame">
-            <img class="image" src="../assets/lagoon.jpg" />
-          </div>
-          <div class="title">
-            <h2 class="ml-4 text-4xl font-bold">{{ title.title }}</h2>
-          </div>
-          <div class="content-preview">
-            <template v-for="(paragraph, index2) in contents[index].content">
-              <p v-if="paragraph">{{ paragraph }}</p>
-              <br v-else />
-            </template>
-          </div>
-          <div class="footer">
-            <v-btn class="show-more" @click="ref" elevation="2">
-              <router-link
-                :to="{
-                  name: 'blogDetail',
-                  params: {
-                    title: title.title.replace(/ /g, '-'),
-                  },
-                  query: {
-                    id: title.id,
-                  },
-                }"
-                >Show More</router-link
-              ></v-btn
+    <div class="col-span-12 sm:col-span-6">
+      <section v-for="data in datas">
+        <div class="max-h-(screen-h-50) background rounded-lg mt-5">
+          <!-- Info Top section -->
+          <div class="-200 p-4">
+            <span class="text-white"
+              >Posted on April 1st, 2023 by John Doe</span
             >
+          </div>
+          <!-- Author section -->
+          <div class="flex items-center p-4">
+            <img
+              class="w-12 h-12 rounded-full mr-4"
+              src="../assets/jupiter.jpg"
+              alt="Author Photo"
+            />
+            <div>
+              <h2 class="text-lg font-semibold text-gray-100">John Doe</h2>
+              <p class="text-gray-300">Author of this article</p>
+            </div>
+          </div>
+          <!-- Image section -->
+          <div class="h-80 md:h-96">
+            <img
+              class="h-full w-full object-cover object-center rounded-t-lg"
+              :src="data.image"
+              alt="Main Image"
+            />
+          </div>
+          <!-- Title section -->
+          <div class="pl-4 pr-4">
+            <h3 class="text-2xl font-semibold text-white">{{ data.title }}</h3>
+          </div>
+
+          <!-- Preview section -->
+          <div
+            class="pl-4 pr-4 text-gray-100"
+            v-html="data.content + '...'"
+          ></div>
+          <div class="font-bold pl-4 show-more" @click="click">Show More</div>
+          <div id="container">
+            <button class="learn-more">
+              <span class="circle flex items-center" aria-hidden="true">
+                <span class="icon arrow"></span>
+              </span>
+              <span class="button-text flex items-center ml-8">
+                <router-link
+                  :to="{
+                    name: 'blogDetail',
+                    params: {
+                      title: data.title.replace(/ /g, '-'),
+                    },
+                    query: {
+                      id: data._id,
+                    },
+                  }"
+                >
+                  Learn More
+                </router-link></span
+              >
+            </button>
+          </div>
+
+          <!-- Footer section -->
+          <div class="pr-4 pl-4 py-2">
+            <div class="flex justify-between items-center">
+              <div>
+                <button class="text-gray-100 mr-2">Like</button>
+                <button class="text-gray-100 mr-2">Dislike</button>
+                <button class="text-gray-100">Comment</button>
+              </div>
+              <div>
+                <button class="text-gray-100">
+                  <i class="fa-sharp fa-light fa-share fa-lg"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -55,6 +98,7 @@
 import { OrbitSpinner } from "epic-spinners";
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import "../assets/learnmore.scss";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "BlogView",
@@ -63,10 +107,8 @@ export default {
   },
   data() {
     return {
-      images: [],
+      abbreviations: [],
       datas: [],
-      contents: [],
-      titles: [],
       dataLoading: true,
       text: null,
       text2: null,
@@ -75,10 +117,7 @@ export default {
     };
   },
   mounted() {
-    axios.get("http://localhost:3333/dumbs/imageget").then((response) => {
-      this.images = response.data;
-      console.log(this.images);
-    });
+    this.fetch();
     let options = {
       root: null,
       rootMargin: "0px",
@@ -88,49 +127,46 @@ export default {
     observer.observe(this.$refs.intersection);
     this.fetch();
   },
-
   methods: {
-    more() {
-      this.fetch();
+    click() {
+      console.log("click");
     },
     fetch() {
       this.dataLoading = true;
-      setTimeout(() => {
-        axios
-          .get("http://localhost:3333/dumbs/blogget", {
-            params: {
-              p: this.page,
-              d: this.dataPerPage,
-            },
-          })
-          .then((response) => {
-            this.datas = response.data;
-            this.datas.forEach((d) => {
-              this.titles.push({
-                id: d._id,
-                title: d.title,
-              });
-              d.sections.forEach((el) => {
-                this.contents.push({
-                  id: this.contents.length,
-                  title: el.title.replace(/ /g, "&nbsp;"),
-                  content: el.content.split("\n"),
-                });
-              });
-            });
-            this.dataLoading = false;
-            this.page++;
-          })
-          .catch((error) => {
-            console.log(error);
+      axios
+        .get("http://localhost:3333/dumbs/articleget", {
+          params: {
+            p: this.page,
+            d: this.dataPerPage,
+          },
+        })
+        .then((response) => {
+          this.datas = response.data;
+          this.datas.forEach((data) => {
+            const array = data.content.split(" ").slice(0, 26);
+            const string = array.join(" ");
+            data.content = string;
           });
-      }, 1000);
+          document.querySelectorAll("h1").forEach((t) => {
+            t.classList.add("text-2xl", "font-bold");
+          });
+        });
     },
   },
 };
 </script>
-
 <style scoped>
+.show-more {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: aliceblue;
+}
+.show-more:hover {
+  color: rgb(19, 106, 205);
+}
+.background {
+  background-color: rgb(24, 24, 24);
+}
 .page-footer {
   height: 1px;
 }
@@ -143,7 +179,7 @@ export default {
   opacity: 0;
   transform: translatey(100px);
 }
-.author {
+/*.author {
   height: 8%;
 }
 .info-top {
@@ -156,7 +192,7 @@ export default {
 .title {
   height: auto;
 }
-.kutu {
+.wrapper {
   margin-top: 10px;
   border-radius: 10px;
   height: 100vh;
@@ -166,7 +202,7 @@ export default {
   background-color: rgb(24, 24, 24);
   border-bottom: 1px solid black;
 }
-.show-more {
+.keep-read {
   margin-left: 10px;
   border-radius: 10px;
   height: 100%;
@@ -175,12 +211,12 @@ export default {
   background-color: aliceblue;
 }
 .content-preview {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 400;
   width: 100%;
-  height: 40%;
-  max-height: 27%;
-  padding: 15px;
+  height: auto;
+  padding-left: 15px;
+  padding-right: 15px;
   overflow: hidden;
 }
 .image {
@@ -202,5 +238,5 @@ export default {
   max-height: calc(100vh - 50px);
   height: 100vh;
   top: 50px;
-}
+}*/
 </style>

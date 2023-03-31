@@ -16,6 +16,25 @@
               <span class="field__label text-white">Enter Title</span>
             </span>
           </div>
+          <div
+            class="image-upload"
+            :style="`background-image: url(${image})`"
+            @click="handleClick"
+          >
+            <div
+              class="image-select flex items-center justify-center"
+              :class="{ fade: image }"
+            >
+              <div>Select a İmage</div>
+            </div>
+            <input
+              class="input"
+              type="file"
+              accept="image/*"
+              ref="fileInput"
+              @change="handleFileInput"
+            />
+          </div>
           <div class="mt-5">
             <QuillEditor theme="snow" :options="editorOptions" />
           </div>
@@ -48,18 +67,14 @@ export default {
   },
   data() {
     return {
+      image: null,
       content: null,
       title: null,
-      sections: [],
-      subtitles: [],
-      contents: [],
-      showModal: false,
       editorOptions: {
         modules: {
           toolbar: [
             ["bold", "italic", "underline"], // toggled buttons
             ["blockquote", "code-block"],
-
             [{ header: 1 }, { header: 2 }], // custom button values
             [{ list: "ordered" }, { list: "bullet" }],
             [{ script: "sub" }, { script: "super" }], // superscript/subscript
@@ -79,13 +94,29 @@ export default {
     };
   },
   methods: {
+    handleClick() {
+      this.$refs.fileInput.click();
+    },
+    handleFileInput(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64Data = reader.result.split(",")[1];
+        const dataUrl = `data:${file.type};base64,${base64Data}`;
+
+        this.image = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    },
     qlUpload() {
-      const payload = document.querySelector(".ql-editor").innerHTML;
+      const payload = {
+        title: this.title,
+        image: this.image,
+        content: document.querySelector(".ql-editor").innerHTML,
+      };
 
       axios
-        .post("http://localhost:3333/dumbs/imagepost", {
-          html: payload,
-        })
+        .post("http://localhost:3333/dumbs/articlepost", payload)
         .then((response) => {
           console.log("Post was successful:", response.data);
         })
@@ -98,6 +129,39 @@ export default {
 </script>
 
 <style scoped>
+.fade {
+  opacity: 0;
+}
+.image-select {
+  width: 100%;
+  height: 100%;
+  color: aliceblue;
+  transition: 0.2s ease-in-out;
+  z-index: 3;
+}
+
+.input {
+  display: none;
+}
+.image-upload {
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  margin-top: 10px;
+  width: 100%;
+  height: 550px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  z-index: 2;
+}
+.image-upload:hover {
+  opacity: 0.4;
+}
+.image-upload:hover .fade {
+  opacity: 1;
+  color: aliceblue;
+}
+
 .upload-button {
   margin-left: 10px;
   border-radius: 10px;

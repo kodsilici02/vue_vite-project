@@ -27,7 +27,7 @@
   color: aliceblue;
 }
 .ql-editor {
-  min-height: 70vh;
+  min-height: 100vh;
 }
 .ql-editor img {
   border-radius: 10px;
@@ -85,4 +85,9 @@
 }
 .ql-toolbar.ql-snow .ql-picker-label:hover {
   background-color: #676767;
+}
+.ql-toolbar.ql-snow {
+  position: sticky;
+  top: 54px;
+  left: 0;
 }

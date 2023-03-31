@@ -30,8 +30,16 @@ const blogSchema = new mongoose.Schema({
 });
 
 //deneme
-const htmlSchema = new mongoose.Schema({
-  html: {
+const articleSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  content: {
     // change "content" to "html"
     type: String,
     required: true,
@@ -40,6 +48,6 @@ const htmlSchema = new mongoose.Schema({
 
 const sectionsSchema = mongoose.model("Blog", blogSchema);
 const dumbsSchema = mongoose.model("dumb", dumbSchema);
-const htmlsSchema = mongoose.model("html", htmlSchema);
+const articlesSchema = mongoose.model("Article", articleSchema);
 
-export { dumbsSchema, sectionsSchema, htmlsSchema };
+export { dumbsSchema, sectionsSchema, articlesSchema };

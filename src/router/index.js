@@ -7,7 +7,6 @@ import ContentOne from "../views/Contents/ContentOne.vue";
 import ContentTwo from "../views/Contents/ContentTwo.vue";
 import ContentFour from "../views/Contents/ContentFour.vue";
 import DefaultCont from "../views/Contents/DefaultCont.vue";
-import FormView from "../views/FormView.vue";
 import UploadCont from "../views/UploadCont.vue";
 import BlogView from "../views/BlogView.vue";
 import BlogDetail from "../views/BlogDetail.vue";
@@ -22,11 +21,6 @@ const routes = [
     path: "/about",
     name: "about",
     component: AboutView,
-  },
-  {
-    path: "/form",
-    name: "form",
-    component: FormView,
   },
   {
     path: "/upload",

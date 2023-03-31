@@ -27,19 +27,19 @@
         class="h-full flex items-center"
         href="https://discord.gg/4B45j7bWqn"
         target="_blank"
-        ><i class="fa-brands fa-discord fa-xl icons"></i
+        ><i class="fa-brands fa-discord fa-sm sm:fa-xl icons"></i
       ></a>
       <a
         class="h-full flex items-center icons"
         href="https://github.com/kodsilici02"
         target="_blank"
-        ><i class="fa-brands fa-github fa-xl"></i
+        ><i class="fa-brands fa-github fa-sm sm:fa-xl"></i
       ></a>
       <a
         class="h-full flex items-center icons"
         href="https://twitter.com/Yazilim_Panteri"
         target="_blank"
-        ><i class="fa-brands fa-twitter fa-xl"></i
+        ><i class="fa-brands fa-twitter fa-sm sm:fa-xl"></i
       ></a>
     </div>
   </div>
