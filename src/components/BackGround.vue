@@ -1,6 +1,11 @@
 <template>
   <div class="background" ref="background"></div>
-  <div class="banner"></div>
+
+  <div class="banner">
+    <video autoplay muted loop class="video">
+      <source src="../assets/background.mp4" />
+    </video>
+  </div>
 </template>
 
 <script>
@@ -112,7 +117,11 @@ export default {
   width: 100%;
   height: 100vh;
   background-size: cover;
+  background-color: black;
   z-index: -4;
-  background-image: url("../assets/AbandonedNecessaryCapeghostfrog-mobile.gif");
+}
+.video {
+  width: 100%;
+  height: 100vh;
 }
 </style>

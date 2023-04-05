@@ -2,12 +2,12 @@
   <BackGround></BackGround>
   <SideBar></SideBar>
   <div class="main" ref="main">
-    <TopBar> </TopBar>
+    <div ref="topbar" v-if="topbar" style="opacity: 0"><TopBar></TopBar></div>
     <div class="routerview">
       <router-view class="router-view" v-slot="{ Component }">
         <transition name="page-opacity">
           <KeepAlive>
-            <component :is="Component" />
+            <component @topbarhide="topbartoggle" :is="Component" />
           </KeepAlive>
         </transition>
       </router-view>
@@ -31,6 +31,7 @@ export default {
   data() {
     return {
       sidebarstate,
+      topbar: true,
     };
   },
   mounted() {
@@ -44,6 +45,23 @@ export default {
         }
       }
     );
+  },
+  methods: {
+    topbartoggle(state) {
+      if (this.$route.matched[0].components.default.name == "HomeView") {
+        if (state == true) {
+          this.topbar = false;
+        } else {
+          this.topbar = true;
+          this.scrollTop = window.scrollY;
+          let element = this.$refs.topbar;
+          element.style.opacity = Math.min(this.scrollTop / 600, 1);
+        }
+      } else {
+        this.topbar == true;
+        this.$refs.topbar.style.opacity = 1;
+      }
+    },
   },
 };
 </script>

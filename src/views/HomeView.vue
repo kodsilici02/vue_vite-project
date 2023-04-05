@@ -32,8 +32,22 @@ export default {
       activeTitle: null,
     };
   },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
 
-  methods: {},
+  methods: {
+    handleScroll() {
+      if (window.scrollY == 0) {
+        this.$emit("topbarhide", true);
+      } else {
+        this.$emit("topbarhide", false);
+      }
+    },
+  },
 };
 </script>
 
