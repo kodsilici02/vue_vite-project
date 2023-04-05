@@ -6,7 +6,9 @@
     <div class="routerview">
       <router-view class="router-view" v-slot="{ Component }">
         <transition name="page-opacity">
-          <component :is="Component" />
+          <KeepAlive>
+            <component :is="Component" />
+          </KeepAlive>
         </transition>
       </router-view>
     </div>

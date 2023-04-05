@@ -1,8 +1,54 @@
-import express from "express";
-import { dumbsSchema, sectionsSchema, articlesSchema } from "./models.js";
+import express, { request } from "express";
+import AWS from "aws-sdk";
+import multer from "multer";
+import { articlesSchema } from "./models.js";
+const router = express();
 
-const router = express.Router();
-//image get all
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_ID,
+  region: "eu-west-3", // Replace with your desired AWS region
+});
+const s3 = new AWS.S3();
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+router.post("/articlepost", upload.single("file"), async (req, res, next) => {
+  const file = req.file;
+  if (!file) {
+    return res.status(400).json({ message: "No file provided" });
+  }
+  const fileBuffer = Buffer.from(file.buffer);
+  const fileName = Date.now() + "-" + file.originalname;
+  res.json(file);
+  const params = {
+    Bucket: "myfckingbucket",
+    Key: "images/" + fileName,
+    Body: fileBuffer,
+    acl: "public-read",
+  };
+  s3.upload(params, async (err, data) => {
+    if (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json({ message: "Failed to upload file", error: err });
+    }
+
+    const imageUrl = data.Location; // Get the URL of the uploaded image from S3
+    try {
+      const article = await articlesSchema.create({
+        title: req.body.title,
+        imageUrl: imageUrl,
+        content: req.body.content,
+      });
+      res.status(201).json(article);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  });
+});
+
+//article route
 router.get("/articleget", async (req, res) => {
   try {
     const image = await articlesSchema.find();
@@ -11,7 +57,7 @@ router.get("/articleget", async (req, res) => {
     return res.status(404).json({ message: error.message });
   }
 });
-// image get by id
+// article get by id
 router.get("/articleget/:id", async (req, res) => {
   try {
     const article = await articlesSchema.findById(req.params.id);
@@ -24,85 +70,11 @@ router.get("/articleget/:id", async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
-//image post
-router.post("/articlepost", async (req, res) => {
+//article post
+router.post("/articlepost2", async (req, res) => {
   try {
-    const image = await articlesSchema.create(req.body);
-    res.status(201).json(image);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-});
-//test
-router.post("/blogpost", async (req, res) => {
-  try {
-    const blog = await sectionsSchema.create(req.body);
-    res.status(201).json(blog);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-});
-router.get("/blogget", async (req, res) => {
-  try {
-    const page = req.query.p || 0;
-    const dataPerPage = req.query.d || 1;
-    const sections = await sectionsSchema
-      .find()
-      .skip(page * dataPerPage)
-      .limit(dataPerPage);
-    res.status(200).json(sections);
-  } catch (error) {
-    return res.status(404).json({ message: error.message });
-  }
-});
-router.get("/blogget/:id", async (req, res) => {
-  try {
-    const blog = await sectionsSchema.findById(req.params.id);
-    if (!blog) {
-      return res.status(404).json({ message: "Blog not found" });
-    }
-    res.status(200).json(blog);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-});
-
-//working
-router.post("/post", async (req, res) => {
-  try {
-    const dumb = await dumbsSchema.create(req.body);
-    res.status(201).json(dumb);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-});
-router.get("/", async (req, res) => {
-  try {
-    const dumbs = await dumbsSchema.find();
-    res.status(200).json(dumbs);
-  } catch (error) {
-    return res.status(404).json({ message: error.message });
-  }
-});
-router.put("/update/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, iq } = req.body;
-    const updateddumb = await dumbsSchema.findByIdAndUpdate(
-      id,
-      { name, iq },
-      { new: true }
-    );
-    res.status(201).json(updateddumb);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-});
-router.delete("/delete/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deleteddumb = await dumbsSchema.findByIdAndDelete(id);
-    res.status(200).json(deleteddumb);
+    const article = await articlesSchema.create(req.body);
+    res.status(201).json(article);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

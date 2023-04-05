@@ -67,8 +67,8 @@ export default {
   },
   data() {
     return {
+      selectedFile: null,
       image: null,
-      content: null,
       title: null,
       editorOptions: {
         modules: {
@@ -98,27 +98,29 @@ export default {
       this.$refs.fileInput.click();
     },
     handleFileInput(event) {
+      this.selectedFile = event.target.files[0];
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = () => {
         const base64Data = reader.result.split(",")[1];
         const dataUrl = `data:${file.type};base64,${base64Data}`;
-
         this.image = dataUrl;
       };
       reader.readAsDataURL(file);
     },
     qlUpload() {
-      const payload = {
-        title: this.title,
-        image: this.image,
-        content: document.querySelector(".ql-editor").innerHTML,
-      };
+      let formData = new FormData();
+      formData.append("file", this.selectedFile);
+      formData.append("title", this.title);
+      formData.append(
+        "content",
+        document.querySelector(".ql-editor").innerHTML
+      );
 
       axios
-        .post("http://localhost:3333/dumbs/articlepost", payload)
+        .post("http://localhost:3333/articlepost", formData)
         .then((response) => {
-          console.log("Post was successful:", response.data);
+          console.log("Post was successful:", response);
         })
         .catch((error) => {
           console.error("There was an error:", error);

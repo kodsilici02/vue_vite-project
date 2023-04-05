@@ -26,8 +26,8 @@
           <!-- Image section -->
           <div class="h-80 md:h-96">
             <img
-              class="h-full w-full object-cover object-center rounded-t-lg"
-              :src="data.image"
+              class="h-full w-full object-cover object-center rounded-lg"
+              :src="data.imageUrl"
               alt="Main Image"
             />
           </div>
@@ -74,8 +74,10 @@
                 <button class="text-gray-100">Comment</button>
               </div>
               <div>
-                <button class="text-gray-100">
-                  <i class="fa-sharp fa-light fa-share fa-lg"></i>
+                <button class="text-gray-400">
+                  <i
+                    class="fa-sharp fa-light fa-share fa-lg ease duration-300 hover:text-white"
+                  ></i>
                 </button>
               </div>
             </div>
@@ -107,6 +109,7 @@ export default {
   },
   data() {
     return {
+      selectedFile: null,
       abbreviations: [],
       datas: [],
       dataLoading: true,
@@ -134,7 +137,7 @@ export default {
     fetch() {
       this.dataLoading = true;
       axios
-        .get("http://localhost:3333/dumbs/articleget", {
+        .get("http://localhost:3333/articleget", {
           params: {
             p: this.page,
             d: this.dataPerPage,
@@ -146,6 +149,7 @@ export default {
             const array = data.content.split(" ").slice(0, 26);
             const string = array.join(" ");
             data.content = string;
+            this.dataPerPage++;
           });
           document.querySelectorAll("h1").forEach((t) => {
             t.classList.add("text-2xl", "font-bold");
