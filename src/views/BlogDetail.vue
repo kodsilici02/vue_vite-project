@@ -1,14 +1,14 @@
 <template>
   <div class="container-fluid w-100 grid grid-cols-12">
-    <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
-    <div class="col-span-6 box3">
+    <div class="hidden sm:grid sm:col-span-2 sidenav">aa</div>
+    <div class="col-span-8 box3">
       <div class="image-frame">
-        <img class="image" :src="data.image" />
+        <img class="image" :src="data.imageUrl" />
       </div>
       <div class="content" v-html="data.content"></div>
     </div>
 
-    <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
+    <div class="hidden sm:grid sm:col-span-2 sidenav">aa</div>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
   setup(props) {
     const data = ref({});
     axios
-      .get("http://localhost:3333/dumbs/articleget/" + props.id)
+      .get("http://localhost:3333/articleget/" + props.id)
       .then((response) => {
         data.value = response.data;
         console.log(data.value);
@@ -63,14 +63,9 @@ export default {
 }
 .image-frame {
   width: 100%;
-  height: 50%;
+  height: 80vh;
   padding: 10px;
   background-color: rgb(24, 24, 24);
-}
-.box-2 {
-  width: 100%;
-  height: 3500px;
-  background-color: aliceblue;
 }
 .box3 {
   height: auto;

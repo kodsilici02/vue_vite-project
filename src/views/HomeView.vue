@@ -1,18 +1,26 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <BgQuote></BgQuote>
-  <div class="container-fluid w-100 grid grid-cols-12 bg">
-    <div
-      v-motion-slide-visible-bottom
-      class="col-span-12 page-header text-7xl flex justify-center items-center text-white"
-    >
-      Home Page
-    </div>
-    <div class="container-fluid col-span-12 grid grid-cols-12 m-5 gap-4">
-      <div v-motion-slide-visible-left class="col-span-5 grid side-cont"></div>
-      <div class="col-span-7 grid grid-cols-12 gap-4">
-        <div v-motion-slide-visible-right class="col-span-12 side-banner"></div>
-        <div v-motion-slide-visible-bottom class="col-span-12 left-cont"></div>
+  <div class="w-full">
+    <BgQuote></BgQuote>
+    <div class="grid grid-cols-12">
+      <div
+        v-motion-slide-visible-bottom
+        class="col-span-12 page-header text-3xl flex sm:text-4xl justify-center items-center text-white"
+      >
+        Home Page
+      </div>
+      <div class="col-span-12 grid grid-cols-12 m-5 gap-4 overflow-hidden">
+        <div
+          v-motion-slide-visible-left
+          class="col-span-12 sm:col-span-5 grid side-cont"
+        ></div>
+        <div class="col-span-12 sm:col-span-7 grid grid-cols-12 gap-4">
+          <div
+            v-motion-slide-visible-bottom
+            class="col-span-12 side-banner"
+          ></div>
+          <div v-motion-slide-visible-right class="col-span-12 left-cont"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -33,20 +41,21 @@ export default {
     };
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll);
+    //window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    // window.removeEventListener("scroll", this.handleScroll);
+    // this.$emit("topbarshow");
   },
 
   methods: {
-    handleScroll() {
+    /*handleScroll() {
       if (window.scrollY == 0) {
         this.$emit("topbarhide", true);
       } else {
         this.$emit("topbarhide", false);
       }
-    },
+    },*/
   },
 };
 </script>

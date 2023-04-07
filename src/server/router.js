@@ -37,6 +37,7 @@ router.post("/articlepost", upload.single("file"), async (req, res, next) => {
     const imageUrl = data.Location; // Get the URL of the uploaded image from S3
     try {
       const article = await articlesSchema.create({
+        date: req.body.date,
         title: req.body.title,
         imageUrl: imageUrl,
         content: req.body.content,
@@ -47,16 +48,21 @@ router.post("/articlepost", upload.single("file"), async (req, res, next) => {
     }
   });
 });
-
 //article route
 router.get("/articleget", async (req, res) => {
   try {
-    const image = await articlesSchema.find();
-    res.status(200).json(image);
+    const page = req.query.p;
+    const dataPerPage = req.query.dataPerPage;
+    const articles = await articlesSchema
+      .find()
+      .skip(page * dataPerPage)
+      .limit(dataPerPage);
+    res.status(200).json(articles);
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
 });
+
 // article get by id
 router.get("/articleget/:id", async (req, res) => {
   try {

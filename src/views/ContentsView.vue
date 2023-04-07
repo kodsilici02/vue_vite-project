@@ -24,15 +24,7 @@ export default {
 .routerview {
   z-index: 1;
 }
-.page-opacity-enter-active,
-.page-opacity-leave-active {
-  transition: 0.5s ease;
-}
-.page-opacity-enter-from,
-.page-opacity-leave-to {
-  opacity: 0;
-  transform: translatey(100px);
-}
+
 .box {
   width: 100%;
   height: 100vh;

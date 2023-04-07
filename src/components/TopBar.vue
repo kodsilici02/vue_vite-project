@@ -1,5 +1,11 @@
 <template>
-  <div class="topbar grid grid-cols-12" theme="dark" ref="topbar">
+  <div
+    :class="{ hidden: this.showbar != true }"
+    class="topbar grid grid-cols-12"
+    theme="dark"
+    ref="topbar"
+    :style="path == '/' ? 'opacity:0;' : 'opacity:1'"
+  >
     <div class="col-span-2 flex items-center justify-items-center">
       <div class="button text-xl" @click="sidebar()">
         <i class="fa-solid fa-bars"></i>
@@ -27,19 +33,19 @@
         class="h-full flex items-center"
         href="https://discord.gg/4B45j7bWqn"
         target="_blank"
-        ><i class="fa-brands fa-discord fa-lg sm:fa-xl icons"></i
+        ><i class="fa-brands fa-discord fa-sm sm:fa-xl icons"></i
       ></a>
       <a
         class="h-full flex items-center icons"
         href="https://github.com/kodsilici02"
         target="_blank"
-        ><i class="fa-brands fa-github fa-lg sm:fa-xl"></i
+        ><i class="fa-brands fa-github fa-sm sm:fa-xl"></i
       ></a>
       <a
         class="h-full flex items-center icons"
         href="https://twitter.com/Yazilim_Panteri"
         target="_blank"
-        ><i class="fa-brands fa-twitter fa-lg sm:fa-xl"></i
+        ><i class="fa-brands fa-twitter fa-sm sm:fa-xl"></i
       ></a>
     </div>
   </div>
@@ -48,8 +54,21 @@
 <script>
 import items from "../router/sidebarroutes.js";
 import { sidebarstate } from "./store.js";
+import { watch } from "vue";
+import { useRoute } from "vue-router";
 export default {
   name: "TopBar",
+  data() {
+    return {
+      showbar: true,
+      path: this.$route.path,
+    };
+  },
+  watch: {
+    $route(to, from) {
+      this.path = to.fullPath;
+    },
+  },
   setup() {
     return {
       sidebarstate,
@@ -58,23 +77,31 @@ export default {
     };
   },
   mounted() {
-    // window.addEventListener("scroll", this.handleScroll);
+    if (this.path != "/") {
+      this.$refs.style.opacity = 1;
+    }
+    window.addEventListener("scroll", this.handleScroll);
   },
-  beforeDestroy() {
-    //  window.removeEventListener("scroll", this.handleScroll);
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 
   methods: {
-    /* handleScroll() {
-      if (window.scrollY == 0) {
-        this.$refs.topbar.classList.add("hidden");
+    handleScroll() {
+      if (this.path == "/") {
+        if (window.scrollY == 0) {
+          this.showbar = false;
+        } else {
+          this.showbar = true;
+          this.scrollTop = window.scrollY;
+          let element = this.$refs.topbar;
+          element.style.opacity = Math.min(this.scrollTop / 600, 1);
+        }
       } else {
-        this.$refs.topbar.classList.remove("hidden");
+        this.showbar = true;
+        this.$refs.topbar.style.opacity = 1;
       }
-      this.scrollTop = window.scrollY;
-      let element = this.$refs.topbar;
-      element.style.opacity = Math.min(this.scrollTop / 600, 1);
-    },*/
+    },
     sidebar() {
       sidebarstate.state = 1;
     },

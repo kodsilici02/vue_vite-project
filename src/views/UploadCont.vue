@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="container-fluid w-full grid grid-cols-12 height">
-      <div class="col-span-2"></div>
-      <div class="col-span-7">
+    <div class="w-full grid grid-cols-12 height">
+      <div class="hidden sm:grid sm:col-span-2 sidenav"></div>
+      <div class="col-span-12 sm:col-span-8">
         <div class="text-area-box p-2">
           <div class="field field_v2">
             <input
@@ -17,16 +17,10 @@
             </span>
           </div>
           <div
-            class="image-upload"
+            class="wrapper"
+            ref="wrapper"
             :style="`background-image: url(${image})`"
-            @click="handleClick"
           >
-            <div
-              class="image-select flex items-center justify-center"
-              :class="{ fade: image }"
-            >
-              <div>Select a İmage</div>
-            </div>
             <input
               class="input"
               type="file"
@@ -35,38 +29,62 @@
               @change="handleFileInput"
             />
           </div>
-          <div class="mt-5">
+          <div
+            class="image flex justify-center items-center"
+            :class="{ opacityhigh: image == null, opacitynone: image != null }"
+            @click="handleClick"
+            @mouseover="opacitylow"
+            @mouseleave="opacityhigh"
+            ref="img"
+          >
+            <div>Select İmage</div>
+          </div>
+          <div class="mt-5 ql-custom">
             <QuillEditor theme="snow" :options="editorOptions" />
           </div>
         </div>
       </div>
       <!--Sidenav-->
-      <div class="col-span-3 sidenav">
-        <div class="sidenav-title">Sections</div>
-        <div class="w-full flex justify-end mt-2">
-          <v-btn class="upload-button mr-2" @click="qlUpload" elevation="2"
-            >Upload</v-btn
-          >
+      <div class="hidden sm:grid sm:col-span-2 sidenav">
+        <div class="w-full h-full flex justify-end items-end">
+          <div class="w-full grid grid-cols-2">
+            <v-btn
+              class="upload-button mt-1 ml-1 mb-2 text-xs col-span-2 md:col-span-1"
+              @click="modalopen"
+              >Modal</v-btn
+            >
+            <v-btn
+              class="upload-button ml-1 mt-1 mb-2 md:mt-0 text-xs col-span-2 md:col-span-1"
+              @click="qlUpload"
+              >Upload</v-btn
+            >
+          </div>
         </div>
       </div>
     </div>
+    <Transition name="transition">
+      <Modal v-if="showModal" @modal-close="modalclose"></Modal>
+    </Transition>
   </div>
 </template>
 
 <script>
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import axios from "axios";
 import ".././assets/input.css";
 import ".././assets/VueQuill.css";
+import Modal from "./MyModal.vue";
 export default {
   name: "UploadCont",
   components: {
     QuillEditor,
+    Modal,
   },
   data() {
     return {
+      showModal: false,
       selectedFile: null,
       image: null,
       title: null,
@@ -93,7 +111,41 @@ export default {
       },
     };
   },
+  mounted() {
+    window.addEventListener("resize", this.resizeHandler);
+    setTimeout(() => {
+      const element = this.$refs.img;
+      const wrapper = this.$refs.wrapper;
+      this.wrapperheight = wrapper.style.offsetHeight;
+      this.wrapperwidth = wrapper.style.offsetWidth;
+      element.style.width = wrapper.offsetWidth + "px";
+      element.style.marginTop = 0 - wrapper.offsetHeight + "px";
+    }, 200);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.resizeHandler);
+  },
   methods: {
+    modalclose() {
+      this.showModal = false;
+    },
+    modalopen() {
+      this.showModal = true;
+    },
+    resizeHandler() {
+      const element = this.$refs.img;
+      const wrapper = this.$refs.wrapper;
+      element.style.width = wrapper.offsetWidth + "px";
+    },
+    file() {
+      console.log(this.selectedFile);
+    },
+    opacityhigh() {
+      this.$refs.wrapper.classList.remove("opacitylow");
+    },
+    opacitylow() {
+      this.$refs.wrapper.classList.add("opacitylow");
+    },
     handleClick() {
       this.$refs.fileInput.click();
     },
@@ -110,6 +162,12 @@ export default {
     },
     qlUpload() {
       let formData = new FormData();
+      const currentdate = new Date();
+      const month = currentdate.toLocaleString("en-US", { month: "long" });
+      const day = currentdate.getDate();
+      const year = currentdate.getFullYear();
+      const fullyear = month + " " + day + " " + year;
+      formData.append("date", fullyear);
       formData.append("file", this.selectedFile);
       formData.append("title", this.title);
       formData.append(
@@ -131,62 +189,59 @@ export default {
 </script>
 
 <style scoped>
+.transition-enter-active,
+.transition-leave-active {
+  transition: 0.5s ease;
+}
+.transition-enter-from,
+.transition-leave-to {
+  opacity: 0;
+  transform: translatey(100px);
+}
+.opacitynone {
+  opacity: 0;
+}
+.opacitylow {
+  opacity: 0.4;
+}
+.opacityhigh {
+  opacity: 1;
+}
+.image {
+  position: absolute;
+  height: 500px;
+  transition: 0.2s ease-in-out;
+  color: aliceblue;
+  z-index: 3;
+  cursor: pointer;
+}
+.image:hover {
+  opacity: 1;
+}
+.wrapper {
+  margin-top: 10px;
+  width: 100%;
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  transition: 0.2s ease-in-out;
+  border-radius: 10px;
+}
 .fade {
   opacity: 0;
 }
-.image-select {
-  width: 100%;
-  height: 100%;
-  color: aliceblue;
-  transition: 0.2s ease-in-out;
-  z-index: 3;
-}
-
 .input {
   display: none;
-}
-.image-upload {
-  border-radius: 10px;
-  background-size: cover;
-  background-position: center;
-  margin-top: 10px;
-  width: 100%;
-  height: 550px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  z-index: 2;
-}
-.image-upload:hover {
-  opacity: 0.4;
 }
 .image-upload:hover .fade {
   opacity: 1;
   color: aliceblue;
 }
-
 .upload-button {
-  margin-left: 10px;
   border-radius: 10px;
   font-weight: bold;
   color: rgb(24, 24, 24);
   background-color: aliceblue;
-}
-textarea {
-  width: 100%;
-  min-height: 72px;
-  padding: 2px;
-  resize: none;
-  overflow: hidden;
-  background-color: transparent;
-  border: 2px solid #000;
-  border-radius: 4px;
-  font-family: "Inconsolata", monospace;
-  font-size: 1rem;
-  color: #000;
-}
-
-textarea:focus {
-  outline: none;
 }
 .height2 {
   height: 600px;
@@ -205,16 +260,6 @@ textarea:focus {
 .subtitle-input {
   width: 100%;
   height: 100%;
-}
-.subtitles {
-  background-color: aliceblue;
-  color: black;
-  margin-top: 5px;
-  height: 40px;
-}
-.height {
-  height: auto;
-  margin-top: 60px;
 }
 .sidenav {
   color: aliceblue;
@@ -236,21 +281,7 @@ textarea:focus {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
-textarea {
-  outline: none;
-  border: 2px solid white;
-}
-textarea:focus {
-  outline: 2px solid white;
-}
-.text-area {
-  border-radius: 10px;
-  width: 100%;
-  height: 100%;
-  color: rgb(255, 255, 255);
-}
 .text-area-box {
-  height: 200vh;
   background-color: rgb(24, 24, 24);
 }
 </style>

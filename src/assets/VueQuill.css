@@ -26,8 +26,14 @@
 .ql-editor {
   color: aliceblue;
 }
+.ql-container.ql-snow {
+  border: 0px solid #d1d5db;
+}
+.ql-container.ql-snow:focus {
+  border: 1px solid #26c10b;
+}
 .ql-editor {
-  min-height: 100vh;
+  height: 100vh;
 }
 .ql-editor img {
   border-radius: 10px;
@@ -87,6 +93,8 @@
   background-color: #676767;
 }
 .ql-toolbar.ql-snow {
+  background-color: #222;
+  z-index: 3;
   position: sticky;
   top: 54px;
   left: 0;

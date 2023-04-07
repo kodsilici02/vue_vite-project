@@ -1,9 +1,13 @@
 // eslint-disable-next-line vue/multi-word-component-names
 <template>
   <div class="container-fluid w-100 grid grid-cols-12">
-    <div class="hidden sm:grid sm:col-span-3 sidenav">aa</div>
-    <div class="col-span-12 sm:col-span-6">
-      <section v-for="data in datas">
+    <div
+      class="hidden sm:grid sm:col-span-1 md:col-span-2 lg:col-span-3 sidenav"
+    >
+      aa
+    </div>
+    <div class="col-span-12 sm:col-span-10 md:col-span-8 lg:col-span-6">
+      <section v-for="(data, index) in datas">
         <div class="max-h-(screen-h-50) background rounded-lg mt-5">
           <!-- Info Top section -->
           <div class="-200 p-4">
@@ -12,15 +16,24 @@
             >
           </div>
           <!-- Author section -->
-          <div class="flex items-center p-4">
-            <img
-              class="w-12 h-12 rounded-full mr-4"
-              src="../assets/jupiter.jpg"
-              alt="Author Photo"
-            />
-            <div>
-              <h2 class="text-lg font-semibold text-gray-100">John Doe</h2>
-              <p class="text-gray-300">Author of this article</p>
+          <div class="flex p-4 w-full">
+            <div class="flex items-center w-6/12">
+              <img
+                class="w-12 h-12 rounded-full mr-4"
+                src="../assets/jupiter.jpg"
+                alt="Author Photo"
+              />
+              <div>
+                <h2 class="text-lg font-semibold text-gray-100">John Doe</h2>
+                <p class="text-gray-300 justify-self-end">
+                  Author of this article
+                </p>
+              </div>
+            </div>
+            <div
+              class="h-full text-slate-100 w-6/12 flex justify-end items-center"
+            >
+              Astronomy
             </div>
           </div>
           <!-- Image section -->
@@ -33,16 +46,38 @@
           </div>
           <!-- Title section -->
           <div class="pl-4 pr-4">
-            <h3 class="text-2xl font-semibold text-white">{{ data.title }}</h3>
+            <h3 class="text-2xl font-semibold text-white">
+              {{ data.title }}
+            </h3>
           </div>
 
           <!-- Preview section -->
           <div
-            class="pl-4 pr-4 text-gray-100"
-            v-html="data.content + '...'"
-          ></div>
-          <div class="font-bold pl-4 show-more" @click="click">Show More</div>
-          <div id="container">
+            class="px-4 text-gray-100 overflow-hidden transition-all duration-200 ease-in-out"
+            ref="container"
+          >
+            <div
+              ref="longabbr"
+              :hidden="data.showmore != true"
+              v-html="'<p>' + data.longabbr + '</p>'"
+            ></div>
+            <div
+              ref="abbr"
+              :hidden="data.showmore == true"
+              v-html="data.abbr + '...'"
+            ></div>
+          </div>
+          <div
+            v-if="data.showmore == true"
+            class="font-bold pl-4 show-more"
+            @click="showless(index)"
+          >
+            Show Less
+          </div>
+          <div v-else class="font-bold pl-4 show-more" @click="showmore(index)">
+            Show More
+          </div>
+          <div id="container" class="mt-2">
             <button class="learn-more">
               <span class="circle flex items-center" aria-hidden="true">
                 <span class="icon arrow"></span>
@@ -92,14 +127,15 @@
         ></OrbitSpinner>
       </div>
     </div>
-    <div class="hidden sm:grid sm:col-span-3 sidenav"></div>
-    <div class="w-full page-footer" ref="intersection"></div>
+    <div
+      class="hidden sm:grid sm:col-span-1 md:col-span-2 lg:col-span-3 sidenav"
+    ></div>
   </div>
 </template>
 <script>
 import { OrbitSpinner } from "epic-spinners";
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import "../assets/learnmore.scss";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -109,30 +145,42 @@ export default {
   },
   data() {
     return {
-      selectedFile: null,
-      abbreviations: [],
       datas: [],
       dataLoading: true,
       text: null,
       text2: null,
+      dpg: 2,
       page: 0,
-      dataPerPage: 10,
+      intersecting: false,
     };
+  },
+  watch: {
+    intersecting(to, from) {
+      if (to == true) {
+        this.fetch();
+      }
+    },
   },
   mounted() {
-    this.fetch();
-    let options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 1.0,
-    };
-    let observer = new IntersectionObserver(this.fetch, options);
-    observer.observe(this.$refs.intersection);
+    window.addEventListener("scroll", this.observer);
     this.fetch();
   },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.observer);
+  },
   methods: {
-    click() {
-      console.log("click");
+    observer() {
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+        this.intersecting = true;
+      } else {
+        this.intersecting = false;
+      }
+    },
+    showmore(index) {
+      this.datas[index].showmore = true;
+    },
+    showless(index) {
+      this.datas[index].showmore = false;
     },
     fetch() {
       this.dataLoading = true;
@@ -140,20 +188,30 @@ export default {
         .get("http://localhost:3333/articleget", {
           params: {
             p: this.page,
-            d: this.dataPerPage,
+            dataPerPage: this.dpg,
           },
         })
         .then((response) => {
-          this.datas = response.data;
+          const responses = response.data;
+          if (response.data.length > 0) {
+            this.page++;
+          }
+          responses.forEach((res) => {
+            this.datas.push(res);
+          });
           this.datas.forEach((data) => {
+            data.longabbr = data.content.split("<p>")[1].split("</p>")[0];
             const array = data.content.split(" ").slice(0, 26);
             const string = array.join(" ");
-            data.content = string;
-            this.dataPerPage++;
+            data.abbr = string;
           });
           document.querySelectorAll("h1").forEach((t) => {
             t.classList.add("text-2xl", "font-bold");
           });
+          this.dataLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
   },
@@ -172,75 +230,6 @@ export default {
   background-color: rgb(24, 24, 24);
 }
 .page-footer {
-  height: 1px;
+  height: 50px;
 }
-.page-opacity-enter-active,
-.page-opacity-leave-active {
-  transition: 0.5s ease;
-}
-.page-opacity-enter-from,
-.page-opacity-leave-to {
-  opacity: 0;
-  transform: translatey(100px);
-}
-/*.author {
-  height: 8%;
-}
-.info-top {
-  height: 4%;
-}
-.footer {
-  width: 100%;
-  height: 5%;
-}
-.title {
-  height: auto;
-}
-.wrapper {
-  margin-top: 10px;
-  border-radius: 10px;
-  height: 100vh;
-  max-height: calc(100vh - 50px);
-  width: 100%;
-  color: #e3e3e3;
-  background-color: rgb(24, 24, 24);
-  border-bottom: 1px solid black;
-}
-.keep-read {
-  margin-left: 10px;
-  border-radius: 10px;
-  height: 100%;
-  font-weight: bold;
-  color: rgb(24, 24, 24);
-  background-color: aliceblue;
-}
-.content-preview {
-  font-size: 14px;
-  font-weight: 400;
-  width: 100%;
-  height: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-  overflow: hidden;
-}
-.image {
-  border-radius: 10px;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.image-frame {
-  width: 100%;
-  height: 50%;
-  padding: 10px;
-  background-color: rgb(24, 24, 24);
-}
-.sidenav {
-  padding-left: 1em;
-  position: sticky;
-  max-height: calc(100vh - 50px);
-  height: 100vh;
-  top: 50px;
-}*/
 </style>

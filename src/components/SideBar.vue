@@ -2,7 +2,7 @@
   <div>
     <div class="sidebar-space hidden" ref="hidden" @click="toggleState()"></div>
     <div
-      class="sidebar sidebar_close w-full sm:w-6/12 md:w-4/12 lg:w-3/12 xl:w-2/12"
+      class="sidebar sidebar_close w-8/12 sm:w-6/12 md:w-4/12 lg:w-3/12 xl:w-2/12"
       ref="sidebar"
     >
       <v-container theme="dark">

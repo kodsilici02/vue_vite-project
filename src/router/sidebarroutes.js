@@ -23,14 +23,6 @@ const items = [
     path: "/contents",
     topbar: true,
   },
-  /* {
-    title: "Form",
-    name: "form",
-    icon: "mdi mdi-form-select",
-    value: "form",
-    path: "/form",
-    topbar: true,
-  },*/
   {
     title: "Upload",
     name: "upload",

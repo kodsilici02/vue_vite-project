@@ -1,9 +1,5 @@
 <template>
   <div class="about">
-    <form @submit.prevent="uploadFile">
-      <input type="file" name="image" @change="onFileChange" ref="fileInput" />
-      <button class="text-white" type="submit">Upload</button>
-    </form>
     <div class="text-center">
       <v-menu transition="fade-transition">
         <template v-slot:activator="{ props }">
@@ -41,34 +37,11 @@
   </div>
 </template>
 <script>
-import axios from "axios";
 export default {
   data() {
-    return {
-      selectedFile: null,
-    };
+    return {};
   },
-  methods: {
-    onFileChange(event) {
-      this.selectedFile = event.target.files[0];
-    },
-    uploadFile() {
-      let formData = new FormData();
-      formData.append("image", this.selectedFile);
-      let form = new FormData();
-      form.append("title", "title1");
-      form.append("content", "content1");
-      console.log(form.get("title"));
-      /*axios
-        .post("http://localhost:3333/upload", formData)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });*/
-    },
-  },
+  methods: {},
 };
 </script>
 

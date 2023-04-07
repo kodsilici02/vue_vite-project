@@ -1,16 +1,16 @@
 <template>
-  <BackGround></BackGround>
-  <SideBar></SideBar>
-  <div class="main" ref="main">
-    <div ref="topbar" v-if="topbar" style="opacity: 0"><TopBar></TopBar></div>
-    <div class="routerview">
-      <router-view class="router-view" v-slot="{ Component }">
-        <transition name="page-opacity">
-          <KeepAlive>
+  <div class="w-full">
+    <BackGround></BackGround>
+    <SideBar></SideBar>
+    <div class="main" ref="main">
+      <div ref="topbar" v-if="topbar"><TopBar></TopBar></div>
+      <div class="routerview">
+        <router-view class="router-view" v-slot="{ Component }">
+          <transition name="vue-transition">
             <component @topbarhide="topbartoggle" :is="Component" />
-          </KeepAlive>
-        </transition>
-      </router-view>
+          </transition>
+        </router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
     );
   },
   methods: {
-    topbartoggle(state) {
+    /*topbartoggle(state) {
       if (this.$route.matched[0].components.default.name == "HomeView") {
         if (state == true) {
           this.topbar = false;
@@ -61,11 +61,32 @@ export default {
         this.topbar == true;
         this.$refs.topbar.style.opacity = 1;
       }
-    },
+    },*/
   },
 };
 </script>
 <style scoped>
+.vue-transition-enter,
+.vue-transition-leave,
+.vue-transition-leave-active {
+  transition: 0.5s ease;
+  opacity: 1;
+}
+.vue-transition-leave-to {
+  opacity: 0;
+  transform: translateY(100px);
+}
+.vue-transition-enter-active {
+  transition: 1s ease;
+}
+.vue-transition-enter-from {
+  opacity: 0;
+  transform: translateY(200px);
+}
+.vue-transition-enter-to {
+  opacity: 1;
+}
+
 .opacity {
   opacity: 0.5;
 }
@@ -75,20 +96,6 @@ export default {
 .routerview {
   z-index: 1;
   margin-top: 50px;
-}
-.page-opacity-enter,
-.page-opacity-leave-to {
-  opacity: 0;
-}
-
-.page-opacity-leave,
-.page-opacity-enter-to {
-  opacity: 1;
-}
-
-.page-opacity-enter-active,
-.page-opacity-leave-active {
-  transition: opacity 300ms;
 }
 </style>
 <style>

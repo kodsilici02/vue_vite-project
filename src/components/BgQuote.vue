@@ -17,7 +17,7 @@ export default {
 </script>
 <style scoped>
 .quote-container {
-  height: 100vh;
+  height: calc(100vh - 50px);
   align-content: center;
 }
 .quote-1 {
