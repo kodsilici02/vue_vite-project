@@ -37,7 +37,7 @@
 }
 .ql-editor img {
   border-radius: 10px;
-  width: 805px;
+  width: 100%;
   height: 600px;
   object-fit: cover;
   object-position: center;
@@ -94,7 +94,7 @@
 }
 .ql-toolbar.ql-snow {
   background-color: #222;
-  z-index: 3;
+  z-index: 1;
   position: sticky;
   top: 54px;
   left: 0;

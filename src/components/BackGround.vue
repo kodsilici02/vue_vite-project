@@ -2,7 +2,7 @@
   <div class="background w-full" ref="background"></div>
   <div class="banner">
     <video autoplay muted loop class="video">
-      <source src="../assets/new.mp4" />
+      <source src="../assets/video2.mp4" />
     </video>
   </div>
 </template>

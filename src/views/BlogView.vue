@@ -30,10 +30,20 @@
                 </p>
               </div>
             </div>
-            <div
-              class="h-full text-slate-100 w-6/12 flex justify-end items-center"
-            >
-              Astronomy
+            <div class="h-full text-slate-100 w-6/12 text-xs">
+              <div class="flex flex-wrap justify-end">
+                <div
+                  v-for="(tag, index) in data.tags"
+                  class="mr-2 mt-1"
+                  style="height: fit-content; width: fit-content"
+                >
+                  <a href="#" target="_blank"
+                    ><div class="tag-box p-1 h-fit flex items-center">
+                      {{ tag }}
+                    </div></a
+                  >
+                </div>
+              </div>
             </div>
           </div>
           <!-- Image section -->
@@ -104,14 +114,26 @@
           <div class="pr-4 pl-4 py-2">
             <div class="flex justify-between items-center">
               <div>
-                <button class="text-gray-100 mr-2">Like</button>
-                <button class="text-gray-100 mr-2">Dislike</button>
-                <button class="text-gray-100">Comment</button>
+                <button class="mr-2 button">
+                  <i
+                    class="fa-solid fa-thumbs-up fa-lg ease duration-300 text-gray-400 hover:text-white"
+                  ></i>
+                </button>
+                <button class="mr-2 button">
+                  <i
+                    class="fa-solid fa-thumbs-down fa-lg ease duration-300 text-gray-400 hover:text-white"
+                  ></i>
+                </button>
+                <button class="button">
+                  <i
+                    class="fa-solid fa-comments fa-lg ease duration-300 text-gray-400 hover:text-white"
+                  ></i>
+                </button>
               </div>
               <div>
-                <button class="text-gray-400">
+                <button>
                   <i
-                    class="fa-sharp fa-light fa-share fa-lg ease duration-300 hover:text-white"
+                    class="fa-sharp fa-light fa-share fa-lg ease duration-300 text-gray-400 hover:text-white"
                   ></i>
                 </button>
               </div>
@@ -218,6 +240,15 @@ export default {
 };
 </script>
 <style scoped>
+.button {
+  width: 40px;
+}
+.tag-box {
+  border-radius: 5px;
+  height: fit-content;
+  background-color: crimson;
+  cursor: pointer;
+}
 .show-more {
   cursor: pointer;
   transition: all 0.2s ease-in-out;

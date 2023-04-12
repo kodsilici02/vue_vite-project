@@ -12,6 +12,7 @@ AWS.config.update({
 const s3 = new AWS.S3();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
 router.post("/articlepost", upload.single("file"), async (req, res, next) => {
   const file = req.file;
   if (!file) {
@@ -19,7 +20,6 @@ router.post("/articlepost", upload.single("file"), async (req, res, next) => {
   }
   const fileBuffer = Buffer.from(file.buffer);
   const fileName = Date.now() + "-" + file.originalname;
-  res.json(file);
   const params = {
     Bucket: "myfckingbucket",
     Key: "images/" + fileName,
@@ -41,6 +41,7 @@ router.post("/articlepost", upload.single("file"), async (req, res, next) => {
         title: req.body.title,
         imageUrl: imageUrl,
         content: req.body.content,
+        tags: req.body.tags,
       });
       res.status(201).json(article);
     } catch (error) {

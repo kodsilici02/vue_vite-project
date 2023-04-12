@@ -18,6 +18,11 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  tags: [
+    {
+      type: String,
+    },
+  ],
 });
 
 const articlesSchema = mongoose.model("Article", articleSchema);
