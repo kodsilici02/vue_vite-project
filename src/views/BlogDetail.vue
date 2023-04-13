@@ -29,7 +29,6 @@ export default {
       .get("http://localhost:3333/articleget/" + props.id)
       .then((response) => {
         data.value = response.data;
-        console.log(data.value);
       })
       .catch((error) => {
         console.log(error);

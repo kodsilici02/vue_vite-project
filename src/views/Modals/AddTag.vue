@@ -59,18 +59,22 @@
 </template>
 
 <script>
+import tags from "../.././router/tagrouter.js";
 export default {
   name: "AddTag",
   data() {
     return {
       selectedTags: [],
-      tags: ["Astronomy", "Biology", "Chemistry", "Physics"],
+      tags: [],
     };
   },
   props: {
     proptags: [],
   },
   mounted() {
+    tags.forEach((tag) => {
+      this.tags.push(tag.name);
+    });
     this.selectedTags = this.proptags;
     this.tags = this.tags.filter((item) => !this.selectedTags.includes(item));
   },

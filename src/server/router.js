@@ -12,7 +12,23 @@ AWS.config.update({
 const s3 = new AWS.S3();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+//Tag Filter
+router.get("/tags/:tag", async (req, res) => {
+  try {
+    const page = req.query.p;
+    const dataPerPage = req.query.dataPerPage;
+    const tag = req.params.tag;
+    const articles = await articlesSchema
+      .find({ tags: tag })
+      .skip(page * dataPerPage)
+      .limit(dataPerPage);
+    res.status(200).json(articles);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
+//Post article
 router.post("/articlepost", upload.single("file"), async (req, res, next) => {
   const file = req.file;
   if (!file) {

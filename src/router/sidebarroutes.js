@@ -16,11 +16,11 @@ const items = [
     topbar: true,
   },
   {
-    title: "Contents",
-    name: "contents",
+    title: "Articles",
+    name: "articles",
     icon: "mdi mdi-forum",
-    value: "contents",
-    path: "/contents",
+    value: "articless",
+    path: "/articles",
     topbar: true,
   },
   {

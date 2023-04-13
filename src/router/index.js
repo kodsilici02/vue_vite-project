@@ -2,14 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import AboutView from "../views/AboutView.vue";
 import NotFound from "../views/NotFound.vue";
-import ContentsView from "../views/ContentsView.vue";
-import ContentOne from "../views/Contents/ContentOne.vue";
-import ContentTwo from "../views/Contents/ContentTwo.vue";
-import ContentFour from "../views/Contents/ContentFour.vue";
-import DefaultCont from "../views/Contents/DefaultCont.vue";
 import UploadCont from "../views/UploadCont.vue";
 import BlogView from "../views/BlogView.vue";
 import BlogDetail from "../views/BlogDetail.vue";
+import DefaultView from "../views/BlogView/DefaultView.vue";
+import TagFilter from "../views/BlogView/TagFilter.vue";
 
 const routes = [
   {
@@ -28,9 +25,23 @@ const routes = [
     component: UploadCont,
   },
   {
-    path: "/contents",
-    name: "contents",
+    path: "/articles",
+    name: "articles",
     component: BlogView,
+    redirect: "/articles/Default",
+    children: [
+      {
+        path: "Default",
+        name: "DefaultView",
+        component: DefaultView,
+      },
+      {
+        path: "tags/:tag",
+        name: "tagFilter",
+        component: TagFilter,
+        props: true,
+      },
+    ],
   },
   {
     path: "/contents/:title",
@@ -38,8 +49,8 @@ const routes = [
     component: BlogDetail,
     props: (route) => ({ id: route.query.id }),
   },
-  /*
-  {
+
+  /*{
     path: "/contents",
     name: "contents",
     component: ContentsView,

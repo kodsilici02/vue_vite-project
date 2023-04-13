@@ -10,7 +10,7 @@
         <div class="col-span-2 flex items-center justify-center">
           <i :class="list.icon" class="text-xl"></i>
         </div>
-        <div class="col-span-10 flex items-center text-left ml-1 text-md">
+        <div class="col-span-10 flex items-center text-left ml-1 text-lg">
           {{ list.title }}
         </div>
       </div>
