@@ -20,7 +20,7 @@
             <div class="flex items-center w-6/12">
               <img
                 class="w-12 h-12 rounded-full mr-4"
-                src="../assets/jupiter.jpg"
+                src="../assets/mctonight.png"
                 alt="Author Photo"
               />
               <div>

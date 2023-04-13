@@ -72,18 +72,23 @@ export default {
   },
   mounted() {
     this.selectedTags = this.proptags;
+    this.tags = this.tags.filter((item) => !this.selectedTags.includes(item));
   },
   beforeUnmount() {
     this.$emit("tag-data", this.selectedTags);
   },
   methods: {
     removeTag(index) {
+      this.tags.push(this.selectedTags[index]);
+      this.tags.sort();
       this.selectedTags.splice(index, 1);
     },
     addTag(index) {
       if (!this.selectedTags.includes(this.tags[index])) {
         this.selectedTags.push(this.tags[index]);
         this.selectedTags.sort();
+        this.tags.splice(index, 1);
+        this.tags.sort();
       }
     },
   },
@@ -132,7 +137,7 @@ export default {
   z-index: 3;
 }
 .sub-layer {
-  background-color: rgba(24, 24, 24, 0.7);
+  background-color: rgba(24, 24, 24, 0);
   width: 100%;
   height: 100%;
   position: fixed;

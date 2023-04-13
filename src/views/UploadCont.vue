@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="w-full grid grid-cols-12 height">
+    <div
+      class="w-full grid grid-cols-12 height transition duration-500"
+      :class="{ opacitylow: showTag }"
+    >
       <div class="hidden lg:grid lg:col-span-2 sidenav"></div>
       <div
         class="col-span-12 lg:col-span-8 transition-all duration-200"
@@ -92,10 +95,15 @@
       class="sidenav-container translate-x-full lg:hidden grid grid-cols-12 transition-all duration-200"
       ref="sidenav"
     >
-      <div class="col-span-6 sm:col-span-8 flex" @click="sidenavopen"></div>
+      <div class="col-span-6 sm:col-span-8" @click="sidenavopen"></div>
       <div
-        class="col-span-6 sm:col-span-4"
+        class="col-span-6 sm:col-span-4 flex flex-wrap"
         style="
+          color: aliceblue;
+          background-color: rgb(24, 24, 24);
+          max-height: calc(100vh - 50px);
+          margin-left: 5px;
+          overflow-y: scroll;
           background-color: rgb(24, 24, 24);
           margin-top: 50px;
           height: calc(100% - 50px);
@@ -118,14 +126,14 @@
           ></v-btn>
         </div>
 
-        <div class="w-full grid grid-cols-2">
+        <div class="w-full flex flex-wrap self-end justify-end items-end">
           <v-btn
-            class="upload-button mt-1 ml-1 mb-2 text-xs col-span-2 sm:col-span-1"
+            class="upload-button w-full mt-1 ml-1 mb-2 text-xs sm:col-span-1"
             @click="modalopen"
             >Modal</v-btn
           >
           <v-btn
-            class="upload-button ml-1 mt-1 mb-2 md:mt-0 text-xs col-span-2 sm:col-span-1"
+            class="upload-button w-full ml-1 mt-1 mb-2 md:mt-0 text-xs col-span-2 sm:col-span-1"
             @click="qlUpload"
             >Upload</v-btn
           >
