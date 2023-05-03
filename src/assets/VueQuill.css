@@ -34,6 +34,8 @@
 }
 .ql-editor {
   height: 100vh;
+  max-height: calc(100vh - 92px);
+  overflow-y: scroll;
 }
 .ql-editor img {
   border-radius: 10px;

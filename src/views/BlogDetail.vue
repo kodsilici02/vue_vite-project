@@ -1,14 +1,14 @@
 <template>
   <div class="container-fluid w-100 grid grid-cols-12">
-    <div class="hidden sm:grid sm:col-span-2 sidenav">aa</div>
-    <div class="col-span-8 box3">
-      <div class="image-frame">
+    <div class="hidden sm:grid sm:col-span-2 sidenav"></div>
+    <div class="col-span-12 sm:col-span-8 box3 p-5">
+      <div class="w-full text-2xl font-bold px-3">{{ data.title }}</div>
+      <div class="image-frame mt-5">
         <img class="image" :src="data.imageUrl" />
       </div>
-      <div class="content" v-html="data.content"></div>
+      <div class="content px-3 mt-5" v-html="data.content"></div>
     </div>
-
-    <div class="hidden sm:grid sm:col-span-2 sidenav">aa</div>
+    <div class="hidden sm:grid sm:col-span-2 sidenav"></div>
   </div>
 </template>
 
@@ -29,6 +29,7 @@ export default {
       .get("http://localhost:3333/articleget/" + props.id)
       .then((response) => {
         data.value = response.data;
+        console.log(data.value);
       })
       .catch((error) => {
         console.log(error);

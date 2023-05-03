@@ -208,8 +208,6 @@ export default {
     setTimeout(() => {
       const element = this.$refs.img;
       const wrapper = this.$refs.wrapper;
-      this.wrapperheight = wrapper.style.offsetHeight;
-      this.wrapperwidth = wrapper.style.offsetWidth;
       element.style.width = wrapper.offsetWidth + "px";
       element.style.marginTop = 0 - wrapper.offsetHeight + "px";
     }, 200);
@@ -218,6 +216,11 @@ export default {
     window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
+    resizeHandler() {
+      const element = this.$refs.img;
+      const wrapper = this.$refs.wrapper;
+      element.style.width = wrapper.offsetWidth + "px";
+    },
     sidenavopen() {
       const formdata = new FormData();
       formdata.append("tags", this.tags);
@@ -242,11 +245,6 @@ export default {
     },
     modalopen() {
       this.showModal = true;
-    },
-    resizeHandler() {
-      const element = this.$refs.img;
-      const wrapper = this.$refs.wrapper;
-      element.style.width = wrapper.offsetWidth + "px";
     },
     file() {
       console.log(this.selectedFile);

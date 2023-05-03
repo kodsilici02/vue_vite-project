@@ -7,6 +7,26 @@
         v-motion-slide-visible-bottom
         class="col-span-12 page-header text-3xl flex sm:text-4xl justify-center items-center text-white"
       >
+        <div
+          id="g_id_onload"
+          data-client_id="365223869262-p1uq5kjftdg6nem3b18o3p93bmmlhul8.apps.googleusercontent.com"
+          data-context="signin"
+          data-ux_mode="redirect"
+          data-login_uri="http://localhost:5173"
+          data-callback="handleoauth"
+          data-auto_select="true"
+          data-itp_support="true"
+        ></div>
+
+        <div
+          class="g_id_signin"
+          data-type="standard"
+          data-shape="pill"
+          data-theme="outline"
+          data-text="signin_with"
+          data-size="large"
+          data-logo_alignment="left"
+        ></div>
         Home Page
       </div>
       <div class="col-span-12 grid grid-cols-12 m-5 gap-4 overflow-hidden">

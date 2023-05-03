@@ -1,6 +1,6 @@
 <template>
   <section v-for="(data, index) in datas">
-    <div class="max-h-(screen-h-50) background rounded-lg mt-5">
+    <div class="background rounded-lg">
       <!-- Info Top section -->
       <div class="-200 p-4">
         <span class="text-white">Posted on April 1st, 2023 by John Doe</span>
@@ -25,7 +25,9 @@
               class="mr-2 mt-1"
               style="height: fit-content; width: fit-content"
             >
-              <a href="#" target="_blank"
+              <a
+                :href="'http://localhost:5173/articles/tags/' + tag"
+                target="_blank"
                 ><div class="tag-box p-1 h-fit flex items-center">
                   {{ tag }}
                 </div></a
@@ -203,6 +205,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+      console.log(this.datas);
     },
   },
 };

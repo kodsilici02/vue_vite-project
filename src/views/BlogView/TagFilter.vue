@@ -3,8 +3,7 @@
   <Transition name="transition">
     <div>
       <section v-for="(data, index) in datas">
-        <v-btn @click="click">Button</v-btn>
-        <div class="max-h-(screen-h-50) background rounded-lg mt-5">
+        <div class="max-h-(screen-h-50) background rounded-lg mt-2">
           <!-- Info Top section -->
           <div class="-200 p-4">
             <span class="text-white"
@@ -33,7 +32,9 @@
                   class="mr-2 mt-1"
                   style="height: fit-content; width: fit-content"
                 >
-                  <a href="#" target="_blank"
+                  <a
+                    :href="'http://localhost:5173/articles/tags/' + tag"
+                    target="_blank"
                     ><div class="tag-box p-1 h-fit flex items-center">
                       {{ tag }}
                     </div></a

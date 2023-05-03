@@ -15,13 +15,14 @@
       >
         <component :is="Component" />
       </router-view>
-      <div v-if="dataLoading" class="w-full flex justify-center mt-5">
+      <div v-if="dataLoading" class="w-full flex justify-center mt-5 mb-0">
         <OrbitSpinner
           :size="55"
           :animation-duration="1200"
           color="#ff1d5e"
         ></OrbitSpinner>
       </div>
+      <div class="h-2"></div>
     </div>
     <div
       class="hidden sm:grid sm:col-span-1 md:col-span-2 lg:col-span-3 sidenav"

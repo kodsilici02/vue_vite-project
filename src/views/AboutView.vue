@@ -37,14 +37,8 @@
   </div>
 </template>
 <script>
-export default {
-  data() {
-    return {};
-  },
-  methods: {},
-};
+export default {};
 </script>
-
 <style scoped>
 .show-more {
   margin-left: 10px;
