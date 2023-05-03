@@ -32,13 +32,18 @@
                   class="mr-2 mt-1"
                   style="height: fit-content; width: fit-content"
                 >
-                  <a
-                    :href="'http://localhost:5173/articles/tags/' + tag"
-                    target="_blank"
-                    ><div class="tag-box p-1 h-fit flex items-center">
-                      {{ tag }}
-                    </div></a
+                  <RouterLink
+                    :to="{
+                      path: '/articles/tags/' + tag,
+                      params: {
+                        tag: tag,
+                      },
+                    }"
                   >
+                    <div class="tag-box p-1 h-fit flex items-center">
+                      {{ tag }}
+                    </div>
+                  </RouterLink>
                 </div>
               </div>
             </div>
@@ -52,7 +57,7 @@
             />
           </div>
           <!-- Title section -->
-          <div class="pl-4 pr-4">
+          <div class="px-4 py-2">
             <h3 class="text-2xl font-semibold text-white">
               {{ data.title }}
             </h3>
@@ -141,107 +146,93 @@
     </div>
   </Transition>
 </template>
-<script>
+<script setup>
 import axios from "axios";
-import { ref, onMounted, watch } from "vue";
-import "../../assets/learnmore.scss";
+import { ref, onMounted, watch, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
+import "../../assets/learnmore.scss";
 
-export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "TagFilter",
-  components: {},
-  data() {
-    return {};
-  },
-  props: {
-    intersecting: Boolean,
-    tag: String,
-  },
-  watch: {
-    intersecting(to, from) {
-      if (to == true) {
-        this.fetch();
-      }
-    },
-  },
-  setup(props) {
-    const text = ref();
-    const text2 = ref();
-    const dpg = 2;
-    var page = 0;
-    var dataLoading = ref();
-    var datas = ref([]);
-    const route = useRoute();
-    const func = () => {
-      console.log("hello");
-    };
-    const fetch = () => {
-      dataLoading = true;
-      axios
-        .get("http://localhost:3333/tags/" + props.tag, {
-          params: {
-            p: page,
-            dataPerPage: dpg,
-          },
-        })
-        .then((response) => {
-          const responses = response.data;
-          if (response.data.length > 0) {
-            page++;
-            responses.forEach((res) => {
-              datas.value.push(res);
-            });
-            datas.value.forEach((data) => {
-              data.longabbr = data.content.split("<p>")[1].split("</p>")[0];
-              const array = data.content.split(" ").slice(0, 26);
-              const string = array.join(" ");
-              data.abbr = string;
-            });
-            document.querySelectorAll("h1").forEach((t) => {
-              t.classList.add("text-2xl", "font-bold");
-            });
-            dataLoading = false;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
+const props = defineProps({
+  intersecting: Boolean,
+});
+
+const text = ref();
+const text2 = ref();
+const dpg = 10;
+var page = 0;
+var dataLoading = ref();
+var datas = ref([]);
+const route = useRoute();
+
+watch(route, (to, from) => {
+  datas.value = [];
+  page = 0;
+  fetch();
+});
+
+const fetch = () => {
+  dataLoading.value = true;
+  axios
+    .get("http://localhost:3333/tags/" + route.params.tag, {
+      params: {
+        p: page,
+        dataPerPage: dpg,
+      },
+    })
+    .then((response) => {
+      const responses = response.data;
+      if (response.data.length > 0) {
+        page++;
+        responses.forEach((res) => {
+          datas.value.push(res);
         });
-    };
-    // You can watch the route changes
-    watch(route, (newVal) => {
-      datas.value = [];
-      page = 0;
-      fetch();
-    });
-    watch();
-    onMounted(() => {
-      datas.value = [];
-      fetch();
-    });
-    watch(props.intersecting, (newVal) => {
-      if (newVal == true) {
-        fetch();
+        datas.value.forEach((data) => {
+          data.longabbr = data.content.split("<p>")[1].split("</p>")[0];
+          const array = data.content.split(" ").slice(0, 26);
+          const string = array.join(" ");
+          data.abbr = string;
+        });
+        document.querySelectorAll("h1").forEach((t) => {
+          t.classList.add("text-2xl", "font-bold");
+        });
+        dataLoading.value = false;
       }
+    })
+    .catch((error) => {
+      console.log(error);
     });
-    return {
-      text,
-      text2,
-      dataLoading,
-      route,
-      datas,
-      fetch,
-      func,
-    };
-  },
-  methods: {
-    showmore(index) {
-      this.datas[index].showmore = true;
-    },
-    showless(index) {
-      this.datas[index].showmore = false;
-    },
-  },
+};
+
+const emits = defineEmits(["loading"]);
+watch(
+  () => dataLoading.value,
+  (newValue, oldValue) => {
+    emits("loading", newValue);
+  }
+);
+
+watch(
+  () => props.intersecting,
+  (newValue, oldValue) => {
+    if (newValue == true) {
+      fetch();
+    }
+  }
+);
+
+onMounted(() => {
+  datas.value = [];
+  fetch();
+});
+onBeforeUnmount(() => {
+  datas.value = [];
+});
+const showmore = (index) => {
+  datas.value[index].showmore = true;
+};
+
+const showless = (index) => {
+  datas.value[index].showmore = false;
 };
 </script>
 <style scoped>

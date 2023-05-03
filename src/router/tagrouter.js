@@ -1,4 +1,4 @@
-const tags = [
+const routertags = [
   {
     name: "Physics",
     param: "Physics",
@@ -24,4 +24,4 @@ const tags = [
     path: "/articles/tags/Biology",
   },
 ];
-export default tags;
+export default routertags;

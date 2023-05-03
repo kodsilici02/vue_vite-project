@@ -28,29 +28,19 @@
     </div>
   </div>
 </template>
-<script>
-import tags from ".././router/tagrouter.js";
+<script setup>
+import routertags from ".././router/tagrouter.js";
+import { watch, ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { watch, ref } from "vue";
-export default {
-  name: "TagRoutes",
-  data() {
-    return {
-      tags: [],
-    };
-  },
-  setup() {
-    const route = useRoute();
-    // You can watch the route changes
-    watch(route, (newVal) => {}, { deep: true });
-    return {
-      route,
-    };
-  },
-  mounted() {
-    this.tags = tags;
-  },
-};
+
+const route = useRoute();
+var tags = ref([]);
+
+watch(route, (newVal) => {}, { deep: true });
+
+onMounted(() => {
+  tags.value = routertags;
+});
 </script>
 <style scoped>
 .box {

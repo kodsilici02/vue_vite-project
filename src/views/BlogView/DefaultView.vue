@@ -1,6 +1,6 @@
 <template>
   <section v-for="(data, index) in datas">
-    <div class="background rounded-lg">
+    <div class="background rounded-lg mt-2">
       <!-- Info Top section -->
       <div class="-200 p-4">
         <span class="text-white">Posted on April 1st, 2023 by John Doe</span>
@@ -25,13 +25,18 @@
               class="mr-2 mt-1"
               style="height: fit-content; width: fit-content"
             >
-              <a
-                :href="'http://localhost:5173/articles/tags/' + tag"
-                target="_blank"
-                ><div class="tag-box p-1 h-fit flex items-center">
-                  {{ tag }}
-                </div></a
+              <RouterLink
+                :to="{
+                  path: '/articles/tags/' + tag,
+                  params: {
+                    tag: tag,
+                  },
+                }"
               >
+                <div class="tag-box p-1 h-fit flex items-center">
+                  {{ tag }}
+                </div>
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -132,84 +137,87 @@
     </div>
   </section>
 </template>
-<script>
+<script setup>
 import { OrbitSpinner } from "epic-spinners";
 import axios from "axios";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, onBeforeUnmount } from "vue";
 import "../.././assets/learnmore.scss";
-export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "BlogView",
-  components: {
-    OrbitSpinner,
-  },
-  data() {
-    return {
-      datas: [],
-      dataLoading: true,
-      text: null,
-      text2: null,
-      dpg: 2,
-      page: 0,
-    };
-  },
-  props: {
-    intersecting: Boolean,
-  },
-  watch: {
-    intersecting(to, from) {
-      if (to == true) {
-        this.fetch();
-      }
-    },
-  },
-  mounted() {
-    this.fetch();
-  },
-  beforeUnmount() {},
-  methods: {
-    showmore(index) {
-      this.datas[index].showmore = true;
-    },
-    showless(index) {
-      this.datas[index].showmore = false;
-    },
-    fetch() {
-      this.dataLoading = true;
-      axios
-        .get("http://localhost:3333/articleget", {
-          params: {
-            p: this.page,
-            dataPerPage: this.dpg,
-          },
-        })
-        .then((response) => {
-          const responses = response.data;
-          if (response.data.length > 0) {
-            this.page++;
-          }
-          responses.forEach((res) => {
-            this.datas.push(res);
-          });
-          this.datas.forEach((data) => {
-            data.longabbr = data.content.split("<p>")[1].split("</p>")[0];
-            const array = data.content.split(" ").slice(0, 26);
-            const string = array.join(" ");
-            data.abbr = string;
-          });
-          document.querySelectorAll("h1").forEach((t) => {
-            t.classList.add("text-2xl", "font-bold");
-          });
-          this.dataLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      console.log(this.datas);
-    },
-  },
+
+const datas = ref([]);
+const dataLoading = ref(true);
+const text = ref(null);
+const text2 = ref(null);
+const dpg = 10;
+var page = 0;
+
+const showmore = (index) => {
+  datas.value[index].showmore = true;
 };
+
+const showless = (index) => {
+  datas.value[index].showmore = false;
+};
+
+const fetch = () => {
+  dataLoading.value = true;
+  axios
+    .get("http://localhost:3333/articleget", {
+      params: {
+        p: page,
+        dataPerPage: dpg,
+      },
+    })
+    .then((response) => {
+      const responses = response.data;
+      if (response.data.length > 0) {
+        page++;
+      }
+      responses.forEach((res) => {
+        datas.value.push(res);
+      });
+      datas.value.forEach((data) => {
+        data.longabbr = data.content.split("<p>")[1].split("</p>")[0];
+        const array = data.content.split(" ").slice(0, 26);
+        const string = array.join(" ");
+        data.abbr = string;
+      });
+      document.querySelectorAll("h1").forEach((t) => {
+        t.classList.add("text-2xl", "font-bold");
+      });
+      dataLoading.value = false;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+onMounted(() => {
+  fetch();
+});
+onBeforeUnmount(() => {
+  datas.value = [];
+});
+const emits = defineEmits(["loading"]);
+watch(
+  () => dataLoading.value,
+  (newValue, oldValue) => {
+    emits("loading", newValue);
+  }
+);
+const props = defineProps({
+  intersecting: Boolean,
+});
+
+watch(
+  () => props.intersecting,
+  (newValue, oldValue) => {
+    if (newValue == true) {
+      fetch();
+    }
+  }
+);
 </script>
+
 <style scoped>
 .button {
   width: 40px;

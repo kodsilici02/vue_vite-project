@@ -39,6 +39,7 @@ const routes = [
         path: "tags/:tag",
         name: "tagFilter",
         component: TagFilter,
+        props: (route) => ({ tag: route.params.tag }),
         props: true,
       },
     ],

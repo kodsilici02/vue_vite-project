@@ -8,12 +8,12 @@
       <TagRoutes @clicked="clicked"></TagRoutes>
     </div>
     <div class="col-span-12 sm:col-span-10 md:col-span-8 lg:col-span-6">
-      <router-view
-        class="router-view"
-        :intersecting="intersecting"
-        v-slot="{ Component }"
-      >
-        <component :is="Component" />
+      <router-view class="router-view" v-slot="{ Component }">
+        <component
+          @loading="deneme"
+          :intersecting="intersecting"
+          :is="Component"
+        />
       </router-view>
       <div v-if="dataLoading" class="w-full flex justify-center mt-5 mb-0">
         <OrbitSpinner
@@ -29,43 +29,37 @@
     ></div>
   </div>
 </template>
-<script>
+<script setup>
 import { OrbitSpinner } from "epic-spinners";
 import axios from "axios";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, onBeforeUnmount } from "vue";
 import "../assets/learnmore.scss";
 import TagRoutes from "../components/TagRoutes.vue";
-export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "BlogView",
-  components: {
-    OrbitSpinner,
-    TagRoutes,
-  },
-  data() {
-    return {
-      dataLoading: true,
-      intersecting: false,
-    };
-  },
 
-  mounted() {
-    window.addEventListener("scroll", this.observer);
-  },
-  beforeUnmount() {
-    window.removeEventListener("scroll", this.observer);
-  },
-  methods: {
-    observer() {
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-        this.intersecting = true;
-      } else {
-        this.intersecting = false;
-      }
-    },
-  },
+var dataLoading = ref(true);
+const intersecting = ref(false);
+
+const deneme = (event) => {
+  dataLoading.value = event;
 };
+
+const observer = () => {
+  if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+    intersecting.value = true;
+  } else {
+    intersecting.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", observer);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", observer);
+});
 </script>
+
 <style scoped>
 .sidenav {
   height: 100h;
